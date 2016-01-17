@@ -27,7 +27,7 @@ public class MyCurrentStoriesFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private Callback mListener;
+//    private Callback mListener;
 
     public MyCurrentStoriesFragment() {
         // Required empty public constructor
@@ -74,22 +74,22 @@ public class MyCurrentStoriesFragment extends Fragment {
 //        }
 //    }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof Callback) {
-            mListener = (Callback) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement Callback");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
+//    @Override
+//    public void onAttach(Context context) {
+//        super.onAttach(context);
+//        if (context instanceof Callback) {
+//            mListener = (Callback) context;
+//        } else {
+//            throw new RuntimeException(context.toString()
+//                    + " must implement Callback");
+//        }
+//    }
+//
+//    @Override
+//    public void onDetach() {
+//        super.onDetach();
+//        mListener = null;
+//    }
 
     /**
      * This interface must be implemented by activities that contain this
@@ -101,8 +101,8 @@ public class MyCurrentStoriesFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface Callback {
-        // TODO: Update argument type and name
-        void onCurrentStoriesSelected(Uri uri);
-    }
+//    public interface Callback {
+//        // TODO: Update argument type and name
+//        void onCurrentStoriesSelected(Uri uri);
+//    }
 }

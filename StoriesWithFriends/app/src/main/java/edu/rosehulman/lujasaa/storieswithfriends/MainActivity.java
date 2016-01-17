@@ -15,7 +15,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import edu.rosehulman.lujasaa.storieswithfriends.Fragments.FriendsFragment;
+import edu.rosehulman.lujasaa.storieswithfriends.Fragments.MyCompletedStoriesFragment;
 import edu.rosehulman.lujasaa.storieswithfriends.Fragments.MyCurrentStoriesFragment;
+import edu.rosehulman.lujasaa.storieswithfriends.Fragments.SettingsFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -96,11 +99,11 @@ public class MainActivity extends AppCompatActivity
             // Handle the camera action
             switchTo = new MyCurrentStoriesFragment();
         } else if (id == R.id.nav_completed_stories) {
-
+            switchTo = new MyCompletedStoriesFragment();
         } else if (id == R.id.nav_friends) {
-
+            switchTo = new FriendsFragment();
         } else if (id == R.id.nav_settings) {
-
+            switchTo = new SettingsFragment();
         } else if (id == R.id.nav_logout) {
 
         }
