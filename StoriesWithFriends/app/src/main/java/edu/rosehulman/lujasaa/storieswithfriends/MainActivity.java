@@ -3,6 +3,8 @@ package edu.rosehulman.lujasaa.storieswithfriends;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,6 +14,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import edu.rosehulman.lujasaa.storieswithfriends.Fragments.MyCurrentStoriesFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -79,19 +83,30 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        Fragment switchTo = null;
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_current_stories) {
             // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+            switchTo = new MyCurrentStoriesFragment();
+        } else if (id == R.id.nav_completed_stories) {
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_friends) {
 
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.nav_settings) {
 
-        } else if (id == R.id.nav_share) {
+        } else if (id == R.id.nav_logout) {
 
-        } else if (id == R.id.nav_send) {
+        }
 
+        if (switchTo != null) {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.fragment_container, switchTo);
+            //clear the backstack so that pressing the back button will exit the application
+            int nEntries = getSupportFragmentManager().getBackStackEntryCount();
+            for(int i = 0 ; i < nEntries ; i ++){
+                getSupportFragmentManager().popBackStackImmediate();
+            }
+            ft.commit();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
