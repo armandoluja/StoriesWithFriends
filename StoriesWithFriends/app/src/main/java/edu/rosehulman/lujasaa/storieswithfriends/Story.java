@@ -7,8 +7,8 @@ import java.util.ArrayList;
  */
 public class Story {
     private int mStoryId;
-    private ArrayList<Integer> mStoryUsers;
-    private int mStoryOwner;
+    private ArrayList<User> mStoryUsers;
+    private User mStoryOwner;
     private boolean isCompleted;
     private int mMode;
     private int mWordLimit;
