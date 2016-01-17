@@ -4,11 +4,15 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import edu.rosehulman.lujasaa.storieswithfriends.R;
+import edu.rosehulman.lujasaa.storieswithfriends.Story;
+import edu.rosehulman.lujasaa.storieswithfriends.StoryAdapter;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -22,6 +26,8 @@ public class MyCurrentStoriesFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private RecyclerView.Adapter mAdapter;
+    private Callback mListener;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -64,7 +70,12 @@ public class MyCurrentStoriesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_my_current_stories, container, false);
+        RecyclerView view = (RecyclerView) inflater.inflate(R.layout.fragment_my_current_stories, container, false);
+        StoryAdapter adapter = new StoryAdapter(getContext(), mListener);
+        view.setAdapter(adapter);
+        view.setLayoutManager(new LinearLayoutManager(getContext()));
+        view.setHasFixedSize(true);
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -101,8 +112,8 @@ public class MyCurrentStoriesFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-//    public interface Callback {
-//        // TODO: Update argument type and name
-//        void onCurrentStoriesSelected(Uri uri);
-//    }
+    public interface Callback {
+        // TODO: Update argument type and name
+        void onCurrentStoriesSelected(Story story);
+    }
 }
