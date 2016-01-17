@@ -1,5 +1,6 @@
 package edu.rosehulman.lujasaa.storieswithfriends;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -18,10 +19,11 @@ import android.view.MenuItem;
 import edu.rosehulman.lujasaa.storieswithfriends.Fragments.FriendsFragment;
 import edu.rosehulman.lujasaa.storieswithfriends.Fragments.MyCompletedStoriesFragment;
 import edu.rosehulman.lujasaa.storieswithfriends.Fragments.MyCurrentStoriesFragment;
-import edu.rosehulman.lujasaa.storieswithfriends.Fragments.SettingsFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private static final int REQUEST_CODE_SETTINGS = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,9 +105,11 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_friends) {
             switchTo = new FriendsFragment();
         } else if (id == R.id.nav_settings) {
-            switchTo = new SettingsFragment();
+            Intent settingsIntent = new Intent(this, SettingsActivity.class);
+            startActivity(settingsIntent);
         } else if (id == R.id.nav_logout) {
-
+            Intent loginIntent = new Intent(this, LoginActivity.class);
+            startActivity(loginIntent);
         }
 
         if (switchTo != null) {
