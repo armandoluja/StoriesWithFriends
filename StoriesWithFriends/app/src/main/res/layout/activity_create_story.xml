@@ -1,0 +1,30 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    tools:context="edu.rosehulman.lujasaa.storieswithfriends.CreateStoryActivity">
+
+
+
+    <Button
+        android:id="@+id/cancel_create_button"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:text="Cancel"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/create_story_button"
+        android:layout_toStartOf="@+id/create_story_button" />
+
+    <Button
+        android:id="@+id/create_story_button"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:text="CREATE!"
+        android:layout_marginRight="37dp"
+        android:layout_marginEnd="37dp"
+        android:layout_alignTop="@+id/cancel_create_button"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+</RelativeLayout>
