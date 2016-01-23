@@ -10,9 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import edu.rosehulman.lujasaa.storieswithfriends.Adapters.StoryAdapter;
 import edu.rosehulman.lujasaa.storieswithfriends.R;
 import edu.rosehulman.lujasaa.storieswithfriends.Story;
-import edu.rosehulman.lujasaa.storieswithfriends.StoryAdapter;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -71,7 +71,7 @@ public class MyCurrentStoriesFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         RecyclerView view = (RecyclerView) inflater.inflate(R.layout.fragment_my_current_stories, container, false);
-        StoryAdapter adapter = new StoryAdapter(getContext(), mListener);
+        StoryAdapter adapter = new StoryAdapter();
         view.setAdapter(adapter);
         view.setLayoutManager(new LinearLayoutManager(getContext()));
         view.setHasFixedSize(true);

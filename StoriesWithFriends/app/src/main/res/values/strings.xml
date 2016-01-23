@@ -89,6 +89,7 @@
     <string name="title_activity_write_story">WriteStoryActivity</string>
     <string name="word_limit">Word Limit</string>
     <string name="time_limit">Time Limit</string>
+    <string name="add_a_friend">Add a friend!</string>
 
     <string-array name="word_limit_array">
         <item>1</item>

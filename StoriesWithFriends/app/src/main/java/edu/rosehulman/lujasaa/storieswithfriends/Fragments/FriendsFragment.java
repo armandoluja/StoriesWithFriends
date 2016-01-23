@@ -4,10 +4,15 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 
+import edu.rosehulman.lujasaa.storieswithfriends.Adapters.FriendAdapter;
 import edu.rosehulman.lujasaa.storieswithfriends.R;
 
 /**
@@ -29,6 +34,10 @@ public class FriendsFragment extends Fragment {
 
 //    private OnFragmentInteractionListener mListener;
 
+    private FriendAdapter mAdapter;
+    private Button mButton;
+    private EditText mEditText;
+
     public FriendsFragment() {
         // Required empty public constructor
     }
@@ -48,6 +57,7 @@ public class FriendsFragment extends Fragment {
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
+
         return fragment;
     }
 
@@ -63,8 +73,15 @@ public class FriendsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_friends, container, false);
+        View view = inflater.inflate(R.layout.fragment_friends, container, false);
+        mButton = (Button) view.findViewById(R.id.add_friend_button);
+        mEditText = (EditText) view.findViewById(R.id.add_friend_text);
+        mAdapter = new FriendAdapter();
+        RecyclerView rV = (RecyclerView) view.findViewById(R.id.friend_recycler_view);
+        rV.setLayoutManager(new LinearLayoutManager(getContext()));
+        rV.setHasFixedSize(true);
+        rV.setAdapter(mAdapter);
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

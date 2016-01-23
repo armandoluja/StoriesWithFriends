@@ -4,10 +4,13 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import edu.rosehulman.lujasaa.storieswithfriends.Adapters.StoryAdapter;
 import edu.rosehulman.lujasaa.storieswithfriends.R;
 
 /**
@@ -63,8 +66,12 @@ public class MyCompletedStoriesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_my_completed_stories, container, false);
+        RecyclerView view = (RecyclerView) inflater.inflate(R.layout.fragment_my_completed_stories, container, false);
+        StoryAdapter adapter = new StoryAdapter();
+        view.setAdapter(adapter);
+        view.setLayoutManager(new LinearLayoutManager(getContext()));
+        view.setHasFixedSize(true);
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

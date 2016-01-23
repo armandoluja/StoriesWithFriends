@@ -1,4 +1,4 @@
-package edu.rosehulman.lujasaa.storieswithfriends;
+package edu.rosehulman.lujasaa.storieswithfriends.Adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -7,15 +7,16 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import edu.rosehulman.lujasaa.storieswithfriends.Fragments.MyCurrentStoriesFragment;
+import edu.rosehulman.lujasaa.storieswithfriends.R;
 
 /**
  * Created by sanderkd on 1/17/2016.
  */
 public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.ViewHolder>{
-    private MyCurrentStoriesFragment.Callback mCallback;
+//    private MyCurrentStoriesFragment.Callback mCallback;
 
-    public StoryAdapter(Context context, MyCurrentStoriesFragment.Callback callback) {
-        mCallback = callback;
+    public StoryAdapter() {
+//        mCallback = callback;
     }
 
     @Override
