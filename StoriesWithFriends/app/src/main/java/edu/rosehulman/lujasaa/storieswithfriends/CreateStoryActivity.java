@@ -11,7 +11,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.GridView;
+import android.widget.ListView;
+import android.widget.Spinner;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -21,6 +25,10 @@ public class CreateStoryActivity extends AppCompatActivity {
     private Button mCreateBtn;
     private Button mCancelBtn;
     private Context mContext;
+    private Spinner mWordSpinner;
+    private Spinner mTimeSpinner;
+    private GridView mGridView;
+    private ListView mListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +42,19 @@ public class CreateStoryActivity extends AppCompatActivity {
         mContext = getBaseContext();
         mCreateBtn = (Button)findViewById(R.id.create_story_button);
         mCancelBtn = (Button)findViewById(R.id.cancel_create_button);
+        mWordSpinner = (Spinner)findViewById(R.id.create_story_word_limit_spinner);
+        mTimeSpinner = (Spinner)findViewById(R.id.create_story_time_limit_spinner);
+        mGridView = (GridView)findViewById(R.id.create_story_grid_view);
+        mListView = (ListView)findViewById(R.id.create_story_list_view);
+
+        ArrayAdapter<CharSequence> wordLimitAdapter = ArrayAdapter.createFromResource(this,
+                R.array.word_limit_array, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> timeLimitAdapter = ArrayAdapter.createFromResource(this,
+                R.array.time_limit_array, android.R.layout.simple_spinner_item);
+        wordLimitAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        timeLimitAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mWordSpinner.setAdapter(wordLimitAdapter);
+        mTimeSpinner.setAdapter(timeLimitAdapter);
 
 
         mCreateBtn.setOnClickListener(new View.OnClickListener() {
@@ -50,6 +71,8 @@ public class CreateStoryActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+
+
     }
 
     @Override

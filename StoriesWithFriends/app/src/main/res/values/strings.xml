@@ -87,4 +87,25 @@
     <string name="title_activity_create_story">CreateStoryActivity</string>
 
     <string name="title_activity_write_story">WriteStoryActivity</string>
+    <string name="word_limit">Word Limit</string>
+    <string name="time_limit">Time Limit</string>
+
+    <string-array name="word_limit_array">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>10</item>
+        <item>20</item>
+        <item>Unlimited</item>
+    </string-array>
+
+    <string-array name="time_limit_array">
+        <item>10 minutes</item>
+        <item>30 minutes</item>
+        <item>1 hour</item>
+        <item>24 hours</item>
+        <item>Unlimited</item>
+    </string-array>
 </resources>
