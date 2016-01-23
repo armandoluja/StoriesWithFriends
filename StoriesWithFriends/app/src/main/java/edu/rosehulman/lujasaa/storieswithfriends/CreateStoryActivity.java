@@ -1,21 +1,21 @@
 package edu.rosehulman.lujasaa.storieswithfriends;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.os.Handler;
-import android.view.MotionEvent;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.GridView;
-import android.widget.ListView;
 import android.widget.Spinner;
+
+import edu.rosehulman.lujasaa.storieswithfriends.Adapters.CreateStoryRecyclerAdapter;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -28,7 +28,7 @@ public class CreateStoryActivity extends AppCompatActivity {
     private Spinner mWordSpinner;
     private Spinner mTimeSpinner;
     private GridView mGridView;
-    private ListView mListView;
+    private CreateStoryRecyclerAdapter mRecyclerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +45,15 @@ public class CreateStoryActivity extends AppCompatActivity {
         mWordSpinner = (Spinner)findViewById(R.id.create_story_word_limit_spinner);
         mTimeSpinner = (Spinner)findViewById(R.id.create_story_time_limit_spinner);
         mGridView = (GridView)findViewById(R.id.create_story_grid_view);
-        mListView = (ListView)findViewById(R.id.create_story_list_view);
+
+        //setup friend recyclerView
+        RecyclerView rV = (RecyclerView) findViewById(R.id.create_story_recycler_view);
+        LinearLayoutManager recyclerLayout = new LinearLayoutManager(this);
+        rV.setLayoutManager(recyclerLayout);
+        rV.setHasFixedSize(true);
+        mRecyclerAdapter = new CreateStoryRecyclerAdapter();
+        rV.setAdapter(mRecyclerAdapter);
+
 
         ArrayAdapter<CharSequence> wordLimitAdapter = ArrayAdapter.createFromResource(this,
                 R.array.word_limit_array, android.R.layout.simple_spinner_item);

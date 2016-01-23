@@ -1,11 +1,9 @@
 package edu.rosehulman.lujasaa.storieswithfriends.Adapters;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -20,12 +18,12 @@ import edu.rosehulman.lujasaa.storieswithfriends.User;
  * Created by sanderkd on 1/23/2016.
  */
 
-public class CreateStoryListAdapter extends RecyclerView.Adapter<CreateStoryListAdapter.ViewHolder>{
+public class CreateStoryRecyclerAdapter extends RecyclerView.Adapter<CreateStoryRecyclerAdapter.ViewHolder>{
 
     private ArrayList<User> friendArray;
 
-    public CreateStoryListAdapter(){
-
+    public CreateStoryRecyclerAdapter(){
+        friendArray = new ArrayList<>();
     }
 
     @Override
