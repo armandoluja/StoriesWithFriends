@@ -31,6 +31,9 @@ public class MainActivity extends AppCompatActivity
 
     public static final String AUTH_UID = "AUTH_UID";
     private Firebase mLoginRef;
+    private String mFirebaseURLAfterAuth;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,14 +43,15 @@ public class MainActivity extends AppCompatActivity
 
         Firebase.setAndroidContext(this);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent createStory = new Intent(view.getContext(), CreateStoryActivity.class);
-                startActivity(createStory);
-            }
-        });
+        Firebase firebase = new Firebase(Constants.FIREBASE_URL);
+        if (firebase.getAuth() == null || isExpired(firebase.getAuth())) {
+            Intent loginIntent = new Intent(this, LoginActivity.class);
+            startActivityForResult(loginIntent, LOGIN_REQUEST_CODE);
+        } else {
+            //stay here
+            mFirebaseURLAfterAuth = Constants.FIREBASE_URL + "/users/" + firebase.getAuth().getUid();
+            mLoginRef = new Firebase(mFirebaseURLAfterAuth);
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -58,24 +62,23 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-
-        Firebase firebase = new Firebase(Constants.FIREBASE_URL);
-        if (firebase.getAuth() == null || isExpired(firebase.getAuth())) {
-            Intent loginIntent = new Intent(this, LoginActivity.class);
-            startActivityForResult(loginIntent, LOGIN_REQUEST_CODE);
-        } else {
-            //stay here
-            String firebaseUrl = Constants.FIREBASE_URL + "/users/" + firebase.getAuth().getUid();
-            mLoginRef = new Firebase(firebaseUrl);
-        }
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent createStory = new Intent(view.getContext(), CreateStoryActivity.class);
+                createStory.putExtra(Constants.FIREBASE, mFirebaseURLAfterAuth);
+                startActivity(createStory);
+            }
+        });
     }
 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(resultCode == LOGIN_REQUEST_CODE){
-            String firebaseUrl = data.getStringExtra(AUTH_UID);
-            mLoginRef = new Firebase(firebaseUrl);
+            mFirebaseURLAfterAuth = Constants.FIREBASE_URL + "/users/" + data.getStringExtra(AUTH_UID);
+            mLoginRef = new Firebase(mFirebaseURLAfterAuth);
         }
         super.onActivityResult(requestCode, resultCode, data);
     }

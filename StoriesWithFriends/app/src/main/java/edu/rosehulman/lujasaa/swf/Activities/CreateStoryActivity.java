@@ -15,7 +15,10 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.Spinner;
 
+import com.firebase.client.Firebase;
+
 import edu.rosehulman.lujasaa.swf.Adapters.CreateStoryRecyclerAdapter;
+import edu.rosehulman.lujasaa.swf.Constants;
 import edu.rosehulman.lujasaa.swf.R;
 
 /**
@@ -30,10 +33,14 @@ public class CreateStoryActivity extends AppCompatActivity {
     private Spinner mTimeSpinner;
     private GridView mGridView;
     private CreateStoryRecyclerAdapter mRecyclerAdapter;
+    private Firebase mStoryRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(savedInstanceState != null){
+            mStoryRef = new Firebase(savedInstanceState.getString(Constants.FIREBASE));
+        }
 
         setContentView(R.layout.activity_create_story);
         ActionBar actionBar = getSupportActionBar();

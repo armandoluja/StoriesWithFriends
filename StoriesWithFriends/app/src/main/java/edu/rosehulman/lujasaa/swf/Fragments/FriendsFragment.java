@@ -14,7 +14,6 @@ import edu.rosehulman.lujasaa.swf.R;
  */
 public class FriendsFragment extends Fragment {
 
-
     public FriendsFragment() {
         // Required empty public constructor
     }
@@ -26,5 +25,4 @@ public class FriendsFragment extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_friends, container, false);
     }
-
 }
