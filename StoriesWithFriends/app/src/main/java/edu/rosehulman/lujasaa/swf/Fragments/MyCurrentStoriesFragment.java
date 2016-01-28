@@ -15,9 +15,12 @@ import edu.rosehulman.lujasaa.swf.R;
 public class MyCurrentStoriesFragment extends Fragment {
 
 
+
+
     public MyCurrentStoriesFragment() {
         // Required empty public constructor
     }
+
 
 
     @Override

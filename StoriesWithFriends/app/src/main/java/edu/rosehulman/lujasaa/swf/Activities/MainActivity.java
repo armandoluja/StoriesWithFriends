@@ -61,8 +61,8 @@ public class MainActivity extends AppCompatActivity
             fb.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    mEmail = dataSnapshot.getKey();
-                    Log.e("email", "onDataChange: " + dataSnapshot.getKey());
+                    mEmail = (String) dataSnapshot.getValue();
+                    Log.e("email", "onDataChange: " + mEmail);
                 }
 
                 @Override
