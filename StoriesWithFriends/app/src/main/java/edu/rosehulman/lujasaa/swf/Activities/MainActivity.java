@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -16,7 +17,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.firebase.client.AuthData;
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 
 import edu.rosehulman.lujasaa.swf.Constants;
 import edu.rosehulman.lujasaa.swf.Fragments.FriendsFragment;
@@ -30,8 +34,9 @@ public class MainActivity extends AppCompatActivity
     private static final int LOGIN_REQUEST_CODE = 1;
 
     public static final String AUTH_UID = "AUTH_UID";
-    private Firebase mLoginRef;
-    private String mFirebaseURLAfterAuth;
+    public static final String AUTH_EMAIL = "AUTH_EMAIL";
+    public static String mUID;
+    public static String mEmail;
 
 
     @Override
@@ -49,8 +54,22 @@ public class MainActivity extends AppCompatActivity
             startActivityForResult(loginIntent, LOGIN_REQUEST_CODE);
         } else {
             //stay here
-            mFirebaseURLAfterAuth = Constants.FIREBASE_URL + "/users/" + firebase.getAuth().getUid();
-            mLoginRef = new Firebase(mFirebaseURLAfterAuth);
+            // we need to figure out how to keep their email stored when they close the app
+            // since we are using their email as the primary key for our links
+            //user their uid to get their email.
+            Firebase fb = new Firebase(Constants.FIREBASE_URL +"/repo/"+ firebase.getAuth().getUid());
+            fb.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    mEmail = dataSnapshot.getKey();
+                    Log.e("email", "onDataChange: " + dataSnapshot.getKey());
+                }
+
+                @Override
+                public void onCancelled(FirebaseError firebaseError) {
+                    //do nothing
+                }
+            });
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -67,7 +86,6 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 Intent createStory = new Intent(view.getContext(), CreateStoryActivity.class);
-                createStory.putExtra(Constants.FIREBASE, mFirebaseURLAfterAuth);
                 startActivity(createStory);
             }
         });
@@ -77,8 +95,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(resultCode == LOGIN_REQUEST_CODE){
-            mFirebaseURLAfterAuth = Constants.FIREBASE_URL + "/users/" + data.getStringExtra(AUTH_UID);
-            mLoginRef = new Firebase(mFirebaseURLAfterAuth);
+            mUID = data.getStringExtra(AUTH_UID);
+            mEmail = data.getStringExtra(AUTH_EMAIL);
         }
         super.onActivityResult(requestCode, resultCode, data);
     }

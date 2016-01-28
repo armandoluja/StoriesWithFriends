@@ -47,6 +47,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private boolean mLoggingIn;
     private SignInButton mGoogleSignInButton;
     private GoogleApiClient mGoogleApiClient;
+    private String mEmailAddress;
+    private String mDisplayName;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -54,9 +56,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if(result.isSuccess()){
                 GoogleSignInAccount account = result.getSignInAccount();
-                String emailAddress = account.getEmail();
+                mEmailAddress = account.getEmail();
+                mDisplayName = account.getDisplayName();
                 //you can get a lot of intereseting things from account (dot) trick
-                getGoogleOAuthToken(emailAddress);
+                getGoogleOAuthToken(mEmailAddress);
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -100,7 +103,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private void onGoogleLoginWithToken(String token) {
         Firebase firebase = new Firebase(Constants.FIREBASE_URL);
         //must write the auth result handler
-        firebase.authWithOAuthToken("google",token,new MyAuthResultHandler());
+        firebase.authWithOAuthToken("google", token, new MyAuthResultHandler());
     }
 
 
@@ -195,7 +198,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         mEmailView.setError(null);
         mPasswordView.setError(null);
 
-        String email = mEmailView.getText().toString();
+        mEmailAddress = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
 
         boolean cancelLogin = false;
@@ -207,11 +210,11 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             cancelLogin = true;
         }
 
-        if (TextUtils.isEmpty(email)) {
+        if (TextUtils.isEmpty(mEmailAddress)) {
             mEmailView.setError(getString(R.string.error_field_required));
             focusView = mEmailView;
             cancelLogin = true;
-        } else if (!isEmailValid(email)) {
+        } else if (!isEmailValid(mEmailAddress)) {
             mEmailView.setError(getString(R.string.error_invalid_email));
             focusView = mEmailView;
             cancelLogin = true;
@@ -224,7 +227,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             // show progress spinner, and start background task to login
             showProgress(true);
             mLoggingIn = true;
-            onLogin(email, password);
+            onLogin(mEmailAddress, password);
             hideKeyboard();
         }
     }
@@ -253,7 +256,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         @Override
         public void onAuthenticated(AuthData authData) {
             Intent returnIntent = new Intent();
-            returnIntent.putExtra(MainActivity.AUTH_UID,authData.getUid());
+            mEmailAddress = mEmailAddress.replace('.','%');
+
+            returnIntent.putExtra(MainActivity.AUTH_UID, authData.getUid());
+            returnIntent.putExtra(MainActivity.AUTH_EMAIL, mEmailAddress);
             setResult(Activity.RESULT_OK, returnIntent);
             finish();
         }
