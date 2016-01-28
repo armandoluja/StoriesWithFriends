@@ -1,0 +1,15 @@
+type DisplayName extends String {
+    validate() { 
+        this.length > 0 && this.length < 15;
+    }
+}
+
+
+type User {
+    displayName: DisplayName,
+    auth: String
+}
+
+type Friend {
+    Fr
+}
