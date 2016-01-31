@@ -1,9 +1,11 @@
 package edu.rosehulman.lujasaa.swf.Activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
@@ -23,13 +25,15 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
 import edu.rosehulman.lujasaa.swf.Constants;
+import edu.rosehulman.lujasaa.swf.Fragments.FriendRequestFragment;
+import edu.rosehulman.lujasaa.swf.Fragments.FriendTopFragment;
 import edu.rosehulman.lujasaa.swf.Fragments.FriendsFragment;
 import edu.rosehulman.lujasaa.swf.Fragments.MyCompletedStoriesFragment;
 import edu.rosehulman.lujasaa.swf.Fragments.MyCurrentStoriesFragment;
 import edu.rosehulman.lujasaa.swf.R;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, FriendTopFragment.Callback {
 
     private static final int LOGIN_REQUEST_CODE = 1;
 
@@ -37,6 +41,7 @@ public class MainActivity extends AppCompatActivity
     public static final String AUTH_EMAIL = "AUTH_EMAIL";
     public static String mUID;
     public static String mEmail;
+    private FragmentManager mFragmentManager;
 
 
     @Override
@@ -89,6 +94,7 @@ public class MainActivity extends AppCompatActivity
                 startActivity(createStory);
             }
         });
+        mFragmentManager = getSupportFragmentManager();
     }
 
 
@@ -162,7 +168,8 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_completed_stories) {
             switchTo = new MyCompletedStoriesFragment();
         } else if (id == R.id.nav_friends) {
-            switchTo = new FriendsFragment();
+            friendFragment(true);
+//            switchTo = new FriendTopFragment();
         } else if (id == R.id.nav_settings) {
             Intent settingsIntent = new Intent(this, SettingsActivity.class);
             startActivity(settingsIntent);
@@ -173,12 +180,12 @@ public class MainActivity extends AppCompatActivity
         }
 
         if (switchTo != null) {
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            FragmentTransaction ft = mFragmentManager.beginTransaction();
             ft.replace(R.id.fragment_container, switchTo);
             //clear the backstack so that pressing the back button will exit the application
             int nEntries = getSupportFragmentManager().getBackStackEntryCount();
             for(int i = 0 ; i < nEntries ; i ++){
-                getSupportFragmentManager().popBackStackImmediate();
+               mFragmentManager.popBackStackImmediate();
             }
             ft.commit();
         }
@@ -189,5 +196,29 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    //friend : true if on friends tab, false if on friend request tab
+    private void friendFragment(Boolean friend) {
+        FragmentTransaction ft = mFragmentManager.beginTransaction();
 
+        //doesn't replace if already on the friends tab
+        if(!(mFragmentManager.findFragmentById(R.id.fragment_container) instanceof FriendTopFragment)) {
+            ft.replace(R.id.fragment_container, new FriendTopFragment());
+        }
+        if(friend && !(mFragmentManager.findFragmentById(R.id.fragment_bottom_container) instanceof FriendsFragment)){
+            ft.replace(R.id.fragment_bottom_container, new FriendsFragment());
+        }
+        else if(!friend && !(mFragmentManager.findFragmentById(R.id.fragment_bottom_container) instanceof FriendRequestFragment)){
+            ft.replace(R.id.fragment_bottom_container, new FriendRequestFragment());
+        }
+        int nEntries = getSupportFragmentManager().getBackStackEntryCount();
+        for(int i = 0 ; i < nEntries ; i ++){
+            getSupportFragmentManager().popBackStackImmediate();
+        }
+        ft.commit();
+    }
+
+    @Override
+    public void onFragmentInteraction(Boolean friend) {
+        friendFragment(friend);
+    }
 }

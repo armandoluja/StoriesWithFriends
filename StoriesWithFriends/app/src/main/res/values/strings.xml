@@ -26,7 +26,7 @@
     <string name="word_limit">Word Limit</string>
     <string name="time_limit">Time Limit</string>
     <string name="add_a_friend">Add a friend!</string>
-
+    <string name="Friends">Friends</string>
 
 
     <string-array name="word_limit_array">
