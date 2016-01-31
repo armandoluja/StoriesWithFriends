@@ -10,11 +10,21 @@ import java.util.ArrayList;
 public class Story {
     @JsonIgnore
     private String key;
-    private int mStoryId;
-    private ArrayList<User> mStoryUsers;
-    private User mStoryOwner;
-    private boolean isCompleted;
-    private int mMode;
+
+    private ArrayList<User> members;
+    private User owner;
+    private boolean completed;
+    private int mode;
+
+    public String getStoryname() {
+        return storyname;
+    }
+
+    public void setStoryname(String storyname) {
+        this.storyname = storyname;
+    }
+
+    private String storyname;
 
     public String getKey() {
         return key;
@@ -24,44 +34,36 @@ public class Story {
         this.key = key;
     }
 
-    public int getmStoryId() {
-        return mStoryId;
+    public ArrayList<User> getMembers() {
+        return members;
     }
 
-    public void setmStoryId(int mStoryId) {
-        this.mStoryId = mStoryId;
+    public void setMembers(ArrayList<User> members) {
+        this.members = members;
     }
 
-    public ArrayList<User> getmStoryUsers() {
-        return mStoryUsers;
+    public User getOwner() {
+        return owner;
     }
 
-    public void setmStoryUsers(ArrayList<User> mStoryUsers) {
-        this.mStoryUsers = mStoryUsers;
-    }
-
-    public User getmStoryOwner() {
-        return mStoryOwner;
-    }
-
-    public void setmStoryOwner(User mStoryOwner) {
-        this.mStoryOwner = mStoryOwner;
+    public void setOwner(User owner) {
+        this.owner = owner;
     }
 
     public boolean isCompleted() {
-        return isCompleted;
+        return completed;
     }
 
     public void setIsCompleted(boolean isCompleted) {
-        this.isCompleted = isCompleted;
+        this.completed = isCompleted;
     }
 
-    public int getmMode() {
-        return mMode;
+    public int getMode() {
+        return mode;
     }
 
-    public void setmMode(int mMode) {
-        this.mMode = mMode;
+    public void setMode(int mode) {
+        this.mode = mode;
     }
 
     public int getmWordLimit() {
