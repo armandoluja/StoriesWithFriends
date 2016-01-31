@@ -86,14 +86,7 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent createStory = new Intent(view.getContext(), CreateStoryActivity.class);
-                startActivity(createStory);
-            }
-        });
+
         mFragmentManager = getSupportFragmentManager();
     }
 
