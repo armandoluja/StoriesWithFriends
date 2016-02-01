@@ -257,7 +257,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         public void onAuthenticated(AuthData authData) {
             Intent returnIntent = new Intent();
             mEmailAddress = mEmailAddress.replace('.','%');
-
+            Log.d("firebase", "Login Activity My authResult handler : onAuthenticated: "+ mEmailAddress);
             returnIntent.putExtra(MainActivity.AUTH_UID, authData.getUid());
             returnIntent.putExtra(MainActivity.AUTH_EMAIL, mEmailAddress);
             setResult(Activity.RESULT_OK, returnIntent);

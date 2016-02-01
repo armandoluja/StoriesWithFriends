@@ -11,20 +11,25 @@ public class Story {
     @JsonIgnore
     private String key;
 
-    private ArrayList<User> members;
-    private User owner;
+    private ArrayList<String> members;
+    private String owner;
     private boolean completed;
     private int mode;
-
-    public String getStoryname() {
-        return storyname;
-    }
-
-    public void setStoryname(String storyname) {
-        this.storyname = storyname;
-    }
-
     private String storyname;
+    private String storyTurn;
+    private int wordlimit;
+
+    public Story(ArrayList<String> members, String owner, boolean completed, int mode, String storyname, String storyTurn, int wordlimit) {
+        this.members = members;
+        this.owner = owner;
+        this.completed = completed;
+        this.mode = mode;
+        this.storyname = storyname;
+        this.storyTurn = storyTurn;
+        this.wordlimit = wordlimit;
+    }
+
+
 
     public String getKey() {
         return key;
@@ -34,19 +39,19 @@ public class Story {
         this.key = key;
     }
 
-    public ArrayList<User> getMembers() {
+    public ArrayList<String> getMembers() {
         return members;
     }
 
-    public void setMembers(ArrayList<User> members) {
+    public void setMembers(ArrayList<String> members) {
         this.members = members;
     }
 
-    public User getOwner() {
+    public String getOwner() {
         return owner;
     }
 
-    public void setOwner(User owner) {
+    public void setOwner(String owner) {
         this.owner = owner;
     }
 
@@ -54,8 +59,8 @@ public class Story {
         return completed;
     }
 
-    public void setIsCompleted(boolean isCompleted) {
-        this.completed = isCompleted;
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
     }
 
     public int getMode() {
@@ -66,33 +71,29 @@ public class Story {
         this.mode = mode;
     }
 
-    public int getmWordLimit() {
-        return mWordLimit;
+    public String getStoryname() {
+        return storyname;
     }
 
-    public void setmWordLimit(int mWordLimit) {
-        this.mWordLimit = mWordLimit;
+    public void setStoryname(String storyname) {
+        this.storyname = storyname;
     }
 
-    public int getmCurrentTurn() {
-        return mCurrentTurn;
+    public String getStoryTurn() {
+        return storyTurn;
     }
 
-    public void setmCurrentTurn(int mCurrentTurn) {
-        this.mCurrentTurn = mCurrentTurn;
+    public void setStoryTurn(String storyTurn) {
+        this.storyTurn = storyTurn;
     }
 
-    public ArrayList<StoryFragment> getmStory() {
-        return mStory;
+    public int getWordlimit() {
+        return wordlimit;
     }
 
-    public void setmStory(ArrayList<StoryFragment> mStory) {
-        this.mStory = mStory;
+    public void setWordlimit(int wordlimit) {
+        this.wordlimit = wordlimit;
     }
-
-    private int mWordLimit;
-    private int mCurrentTurn;
-    private ArrayList<StoryFragment> mStory;
 
     public Story(){
 

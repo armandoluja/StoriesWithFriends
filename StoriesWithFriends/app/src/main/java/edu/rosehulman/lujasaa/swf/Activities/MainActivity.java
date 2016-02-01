@@ -1,6 +1,7 @@
 package edu.rosehulman.lujasaa.swf.Activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -24,6 +25,7 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
+import edu.rosehulman.lujasaa.swf.Const;
 import edu.rosehulman.lujasaa.swf.Constants;
 import edu.rosehulman.lujasaa.swf.Fragments.FriendRequestFragment;
 import edu.rosehulman.lujasaa.swf.Fragments.FriendTopFragment;
@@ -36,7 +38,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, FriendTopFragment.Callback {
 
     private static final int LOGIN_REQUEST_CODE = 1;
-
+    private final static String PREFS = "PREFS";
     public static final String AUTH_UID = "AUTH_UID";
     public static final String AUTH_EMAIL = "AUTH_EMAIL";
     public static String mUID;
@@ -47,34 +49,19 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Firebase.setAndroidContext(this);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        Firebase.setAndroidContext(this);
+        //load the email and uid from shared prefs
+        SharedPreferences prefs = getSharedPreferences(PREFS,MODE_PRIVATE);
+        mEmail = prefs.getString(AUTH_EMAIL,"");
+        mUID = prefs.getString(AUTH_UID,"");
 
         Firebase firebase = new Firebase(Constants.FIREBASE_URL);
         if (firebase.getAuth() == null || isExpired(firebase.getAuth())) {
             Intent loginIntent = new Intent(this, LoginActivity.class);
             startActivityForResult(loginIntent, LOGIN_REQUEST_CODE);
-        } else {
-            //stay here
-            // we need to figure out how to keep their email stored when they close the app
-            // since we are using their email as the primary key for our links
-            //user their uid to get their email.
-            Firebase fb = new Firebase(Constants.FIREBASE_URL +"/repo/"+ firebase.getAuth().getUid());
-            fb.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    mEmail = (String) dataSnapshot.getValue();
-                    Log.e("email", "onDataChange: " + mEmail);
-                }
-
-                @Override
-                public void onCancelled(FirebaseError firebaseError) {
-                    //do nothing
-                }
-            });
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -85,17 +72,29 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-
         mFragmentManager = getSupportFragmentManager();
     }
 
+    // store the email and uid
+    @Override
+    protected void onPause() {
+        super.onPause();
+        SharedPreferences prefs = getSharedPreferences(PREFS, MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(AUTH_UID, mUID);
+        editor.putString(AUTH_EMAIL,mEmail);
+        // Put the other fields into the editor
+        editor.commit();
+    }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(resultCode == LOGIN_REQUEST_CODE){
-            mUID = data.getStringExtra(AUTH_UID);
-            mEmail = data.getStringExtra(AUTH_EMAIL);
+protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == LOGIN_REQUEST_CODE){
+            Bundle extras = data.getExtras();
+            mUID = extras.getString(AUTH_UID);
+            mEmail = extras.getString(AUTH_EMAIL);
+//            Log.d("Extras", "onActivityResult 1: " + data.getStringExtra(AUTH_EMAIL) );
+//            Log.d("Extras", "onActivityResult 2: " + extras.getString(AUTH_EMAIL) );
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -152,6 +151,7 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_current_stories) {
             // Handle the camera action
+            Log.d("firebase", "printing out email from mainactivity: " + mEmail);
             switchTo = new MyCurrentStoriesFragment();
         } else if (id == R.id.nav_completed_stories) {
             switchTo = new MyCompletedStoriesFragment();
