@@ -28,12 +28,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/friend_row_check_box"
-        android:scaleY="3"
-        android:scaleX="3"
-        android:layout_alignBottom="@+id/friend_row_text"
+        android:scaleY="2"
+        android:scaleX="2"
+        android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginRight="35dp"
-        android:layout_marginEnd="35dp" />
+        android:layout_marginRight="46dp"
+        android:layout_marginEnd="46dp" />
 </RelativeLayout>
 

@@ -16,7 +16,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="UserName"
-        android:id="@+id/textView3"
+        android:id="@+id/create_story_add_friend_text"
         android:layout_alignBottom="@+id/create_story_add_friend_image"
         android:layout_toRightOf="@+id/create_story_add_friend_image"
         android:layout_toEndOf="@+id/create_story_add_friend_image"

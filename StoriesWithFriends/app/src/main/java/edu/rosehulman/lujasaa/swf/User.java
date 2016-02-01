@@ -1,6 +1,6 @@
 package edu.rosehulman.lujasaa.swf;
 
-import android.graphics.Bitmap;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.ArrayList;
 
@@ -8,49 +8,55 @@ import java.util.ArrayList;
  * Created by sanderkd on 1/17/2016.
  */
 public class User {
-    private int mId;
-    private String username;
-    private boolean vibrate;
-    private Bitmap image;
-    private ArrayList<Integer> mStoryIds;
 
-    public int getmId() {
-        return mId;
+    private String displayName;
+    private String icon;
+
+
+    @JsonIgnore
+    private ArrayList<String> stories;
+    @JsonIgnore
+    private String UID;
+
+    public User(){
+        //required empty constructor
     }
 
-    public void setmId(int mId) {
-        this.mId = mId;
+    public String getDisplayName() {
+        return displayName;
     }
 
-    public String getUsername() {
-        return username;
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public String getIcon() {
+        return icon;
     }
 
-    public ArrayList<Integer> getmStoryIds() {
-        return mStoryIds;
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 
-    public void setmStoryIds(ArrayList<Integer> mStoryIds) {
-        this.mStoryIds = mStoryIds;
+    public ArrayList<String> getStories() {
+        return stories;
     }
 
-    public boolean isVibrate() {
-        return vibrate;
+    public void setStories(ArrayList<String> stories) {
+        this.stories = stories;
     }
 
-    public void setVibrate(boolean vibrate) {
-        this.vibrate = vibrate;
+    public void setValues(User vals){
+        this.displayName = vals.displayName;
+        this.icon = vals.icon;
+        this.stories = vals.stories;
     }
 
-    public Bitmap getImage() {
-        return image;
+    public String getUID() {
+        return UID;
     }
 
-    public void setImage(Bitmap image) {
-        this.image = image;
+    public void setUID(String UID) {
+        this.UID = UID;
     }
 }

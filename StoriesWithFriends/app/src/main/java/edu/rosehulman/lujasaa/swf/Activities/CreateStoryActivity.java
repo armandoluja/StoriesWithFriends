@@ -17,15 +17,17 @@ import android.widget.Spinner;
 
 import com.firebase.client.Firebase;
 
+import edu.rosehulman.lujasaa.swf.Adapters.CreateStoryGridviewAdapter;
 import edu.rosehulman.lujasaa.swf.Adapters.CreateStoryRecyclerAdapter;
 import edu.rosehulman.lujasaa.swf.Constants;
 import edu.rosehulman.lujasaa.swf.R;
+import edu.rosehulman.lujasaa.swf.User;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class CreateStoryActivity extends AppCompatActivity {
+public class CreateStoryActivity extends AppCompatActivity implements CreateStoryRecyclerAdapter.Callback{
     private Button mCreateBtn;
     private Button mCancelBtn;
     private Context mContext;
@@ -33,6 +35,7 @@ public class CreateStoryActivity extends AppCompatActivity {
     private Spinner mTimeSpinner;
     private GridView mGridView;
     private CreateStoryRecyclerAdapter mRecyclerAdapter;
+    private CreateStoryGridviewAdapter mGridviewAdapter;
     private Firebase mStoryRef;
 
     @Override
@@ -52,14 +55,17 @@ public class CreateStoryActivity extends AppCompatActivity {
         mCancelBtn = (Button)findViewById(R.id.cancel_create_button);
         mWordSpinner = (Spinner)findViewById(R.id.create_story_word_limit_spinner);
         mTimeSpinner = (Spinner)findViewById(R.id.create_story_time_limit_spinner);
+
         mGridView = (GridView)findViewById(R.id.create_story_grid_view);
+        mGridviewAdapter = new CreateStoryGridviewAdapter(this);
+        mGridView.setAdapter(mGridviewAdapter);
 
         //setup friend recyclerView
         RecyclerView rV = (RecyclerView) findViewById(R.id.create_story_recycler_view);
         LinearLayoutManager recyclerLayout = new LinearLayoutManager(this);
         rV.setLayoutManager(recyclerLayout);
         rV.setHasFixedSize(true);
-        mRecyclerAdapter = new CreateStoryRecyclerAdapter();
+        mRecyclerAdapter = new CreateStoryRecyclerAdapter(this);
         rV.setAdapter(mRecyclerAdapter);
 
 
@@ -102,4 +108,12 @@ public class CreateStoryActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void friendSelected(User friend, boolean add) {
+        if(add){
+            mGridviewAdapter.addFriend(friend);
+        }else{
+            mGridviewAdapter.removeFriend(friend);
+        }
+    }
 }

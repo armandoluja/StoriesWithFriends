@@ -1,6 +1,7 @@
 package edu.rosehulman.lujasaa.swf.Adapters;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,27 +20,28 @@ import java.util.ArrayList;
 import edu.rosehulman.lujasaa.swf.Activities.MainActivity;
 import edu.rosehulman.lujasaa.swf.Const;
 import edu.rosehulman.lujasaa.swf.R;
+import edu.rosehulman.lujasaa.swf.User;
 
 
 /**
  * Created by sanderkd on 1/23/2016.
  */
 public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder> {
-    private ArrayList<Friend> friendArray;
-    private Firebase mFriendRef;
-    private Firebase mFriendRequestRef;
+    private ArrayList<User> friendArray;
+    private Firebase friendRef;
+    private Firebase friendRequestRef;
     private Boolean friendState;
 
     public FriendAdapter(Boolean friend) {
         friendArray = new ArrayList<>();
-        mFriendRef = new Firebase(Const.FRIEND_REF);
+        friendRef = new Firebase(Const.FRIEND_REF);
         friendState = friend;
-        mFriendRequestRef = new Firebase(Const.FRIEND_REQUEST_REF);
+        friendRequestRef = new Firebase(Const.FRIEND_REQUEST_REF);
         if(friendState) {
-            mFriendRef.child(MainActivity.mEmail).addChildEventListener(new FriendChildListener());
+            friendRef.child(MainActivity.mEmail).addChildEventListener(new FriendChildListener());
         }
         else{
-            mFriendRequestRef.child(MainActivity.mEmail).addChildEventListener(new FrendRequestChldListener());
+            friendRequestRef.child(MainActivity.mEmail).addChildEventListener(new FrendRequestChldListener());
         }
     }
 
@@ -51,16 +53,16 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
-        holder.mText.setText(friendArray.get(position).displayName);
+        holder.mText.setText(friendArray.get(position).getDisplayName());
 //        holder.mImage.setImageBitmap(friendArray.get(position).icon);
         holder.mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(friendState) {
-                    firebaseRemoveFriend(friendArray.get(position).friendID);
+                    firebaseRemoveFriend(friendArray.get(position).getUID());
                 }
                 else{
-                    firebaseAddFriend(friendArray.get(position).friendID);
+                    firebaseAddFriend(friendArray.get(position).getUID());
                 }
             }
         });
@@ -91,12 +93,15 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder
         @Override
         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
             final String friendID = (String) dataSnapshot.getKey();
-            final Firebase displayName = new Firebase(Const.USER_REF + friendID + "/displayName");
+            final Firebase displayName = new Firebase(Const.USER_REF + friendID);
+            Log.d("db", dataSnapshot.getValue()+"");
             displayName.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    Friend f = new Friend(friendID, (String) dataSnapshot.getValue());
-                    friendArray.add(f);
+                    Log.d("db", ""+dataSnapshot.getValue());
+                    User user = dataSnapshot.getValue(User.class);
+                    user.setUID(dataSnapshot.getKey());
+                    friendArray.add(user);
                     notifyDataSetChanged();
                 }
 
@@ -115,8 +120,8 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder
         @Override
         public void onChildRemoved(DataSnapshot dataSnapshot) {
             String key = dataSnapshot.getKey();
-            for(Friend friend: friendArray){
-                if(key.equals(friend.friendID)){
+            for(User friend: friendArray){
+                if(key.equals(friend.getUID())){
                     friendArray.remove(friend);
                     notifyDataSetChanged();
                     return;
@@ -140,12 +145,13 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder
         @Override
         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
             final String friendID = (String) dataSnapshot.getKey();
-            final Firebase displayName = new Firebase(Const.USER_REF + friendID + "/displayName");
+            final Firebase displayName = new Firebase(Const.USER_REF + friendID);
             displayName.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    Friend f = new Friend(friendID, (String) dataSnapshot.getValue());
-                    friendArray.add(f);
+                    User user = dataSnapshot.getValue(User.class);
+                    user.setUID(dataSnapshot.getKey());
+                    friendArray.add(user);
                     notifyDataSetChanged();
                 }
 
@@ -164,8 +170,8 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder
         @Override
         public void onChildRemoved(DataSnapshot dataSnapshot) {
             String key = dataSnapshot.getKey();
-            for(Friend friend: friendArray){
-                if(key.equals(friend.friendID)){
+            for(User friend: friendArray){
+                if(key.equals(friend.getUID())){
                     friendArray.remove(friend);
                     notifyDataSetChanged();
                     return;
@@ -185,24 +191,19 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder
     }
 
     public void firebaseRemoveFriend(String friend){
-        mFriendRef.child(MainActivity.mEmail).child(friend).removeValue();
+        friendRef.child(MainActivity.mEmail).child(friend).removeValue();
     }
     public void firebaseAddFriend(String friend){
-        mFriendRequestRef.child(MainActivity.mEmail).child(friend).removeValue();
-        mFriendRef.child(MainActivity.mEmail).child(friend).setValue(true);
+        friendRequestRef.child(MainActivity.mEmail).child(friend).removeValue();
+        friendRef.child(MainActivity.mEmail).child(friend).setValue(true);
     }
     public void firebaseSendFriendRequest(String friend){
-        mFriendRequestRef.child(friend).child(MainActivity.mEmail).setValue(true);
-    }
-
-    private class Friend{
-        public String friendID;
-        public String displayName;
-        Friend(String friendID, String  displayName){
-            this.friendID = friendID;
-            this.displayName = displayName;
+        if(!friend.isEmpty()) {
+            String add = friend.replace(".", "%");
+            friendRequestRef.child(add).child(MainActivity.mEmail).setValue(true);
         }
     }
+
 
 
 }
