@@ -3,7 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ffffff"
-    tools:context="edu.rosehulman.lujasaa.storieswithfriends.CreateStoryActivity">
+    tools:context="edu.rosehulman.lujasaa.storieswithfriends.CreateStoryActivity"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp">
 
 
 
@@ -32,6 +34,10 @@
         android:layout_height="120dp"
         android:id="@+id/create_story_grid_view"
         android:numColumns="auto_fit"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />

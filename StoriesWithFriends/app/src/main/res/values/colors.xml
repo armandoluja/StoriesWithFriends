@@ -2,6 +2,6 @@
 <resources>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
-    <color name="friend_button_background">#e22222</color>
+    <color name="colorAccent">#2eb7ed</color>
+    <color name="friend_button_background">#c7eeff</color>
 </resources>

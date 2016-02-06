@@ -5,17 +5,24 @@
     tools:context="edu.rosehulman.lujasaa.swf.Fragments.FriendsFragment">
 
     <EditText
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginRight="5dp"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:hint="@string/add_a_friend"
         android:id="@+id/add_friend_text"/>
 
     <Button
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:background="@drawable/add"
         android:id="@+id/add_friend_button"
-        android:layout_alignParentTop="true"
         android:layout_toRightOf="@+id/add_friend_text"
         android:layout_toEndOf="@+id/add_friend_text"/>
 
@@ -25,7 +32,7 @@
         android:id="@+id/friend_recycler_view"
         android:layout_below="@+id/add_friend_text"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="33dp" />
+        android:layout_marginTop="15dp" />
 
 
 </RelativeLayout>
