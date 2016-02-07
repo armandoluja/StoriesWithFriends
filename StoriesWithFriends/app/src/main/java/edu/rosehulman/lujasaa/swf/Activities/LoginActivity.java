@@ -271,16 +271,31 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
              * Check if the user is already registered, if not, register them
              * with the default registration settings.
              */
-            Firebase checkUserNameAndIcon = new Firebase(Const.USER_REF);
-            if(checkUserNameAndIcon.child(mEmailAddress) == null){
-                /**
-                 * Create a default user.
-                 */
-                mUser = new User();
-                mUser.setDisplayName(mDisplayName);
-                mUser.setIcon("defaultIcon");
-                checkUserNameAndIcon.child(mEmailAddress).setValue(mUser);
-            }
+            final Firebase checkUserNameAndIcon = new Firebase(Const.USER_REF +mEmailAddress + "/");
+            checkUserNameAndIcon.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if(dataSnapshot.exists()){
+
+                    }else{
+                        /**
+                         * Create a default user.
+                         */
+                        mUser = new User();
+                        mUser.setDisplayName(mDisplayName);
+                        mUser.setIcon("defaultIcon");
+                        checkUserNameAndIcon.setValue(mUser);
+                    }
+                }
+
+                @Override
+                public void onCancelled(FirebaseError firebaseError) {
+
+                }
+            });
+
+
+
             setResult(Activity.RESULT_OK, returnIntent);
             finish();
         }
