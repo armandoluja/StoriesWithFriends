@@ -32,8 +32,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.io.IOException;
 
-import edu.rosehulman.lujasaa.swf.Activities.MainActivity;
-import edu.rosehulman.lujasaa.swf.Constants;
+import edu.rosehulman.lujasaa.swf.Const;
 import edu.rosehulman.lujasaa.swf.R;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
@@ -101,7 +100,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
     private void onGoogleLoginWithToken(String token) {
-        Firebase firebase = new Firebase(Constants.FIREBASE_URL);
+        Firebase firebase = new Firebase(Const.FIREBASE);
         //must write the auth result handler
         firebase.authWithOAuthToken("google", token, new MyAuthResultHandler());
     }
@@ -167,7 +166,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             }
         });
 
-        Firebase firebase = new Firebase(Constants.FIREBASE_URL);
+        Firebase firebase = new Firebase(Const.FIREBASE);
     }
 
     private void loginWithGoogle() {
@@ -247,7 +246,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     public void onLogin(String email, String password) {
         //TODO: Log user in with username & password
         //stuff that happens when someone logs in
-        Firebase firebase = new Firebase(Constants.FIREBASE_URL);
+        Firebase firebase = new Firebase(Const.FIREBASE);
         //must write the auth result handler
         firebase.authWithPassword(email, password, new MyAuthResultHandler());
     }
@@ -291,7 +290,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        Log.e(Constants.TAG, "onConnectionFailed: ");
+        Log.e("TAG", "onConnectionFailed: ");
     }
 
 

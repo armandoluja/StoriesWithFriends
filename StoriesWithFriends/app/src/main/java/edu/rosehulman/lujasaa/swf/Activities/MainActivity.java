@@ -26,7 +26,6 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
 import edu.rosehulman.lujasaa.swf.Const;
-import edu.rosehulman.lujasaa.swf.Constants;
 import edu.rosehulman.lujasaa.swf.Fragments.FriendRequestFragment;
 import edu.rosehulman.lujasaa.swf.Fragments.FriendTopFragment;
 import edu.rosehulman.lujasaa.swf.Fragments.FriendsFragment;
@@ -58,7 +57,7 @@ public class MainActivity extends AppCompatActivity
         mEmail = prefs.getString(AUTH_EMAIL,"");
         mUID = prefs.getString(AUTH_UID,"");
 
-        Firebase firebase = new Firebase(Constants.FIREBASE_URL);
+        Firebase firebase = new Firebase(Const.FIREBASE);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -109,7 +108,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
     public void onLogout() {
         //TODO: Log the user out.
-        Firebase firebase = new Firebase(Constants.FIREBASE_URL);
+        Firebase firebase = new Firebase(Const.FIREBASE);
         firebase.unauth();
         Intent loginIntent = new Intent(this, LoginActivity.class);
         startActivityForResult(loginIntent, LOGIN_REQUEST_CODE);

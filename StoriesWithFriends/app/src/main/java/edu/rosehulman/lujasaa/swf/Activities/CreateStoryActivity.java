@@ -19,7 +19,7 @@ import com.firebase.client.Firebase;
 
 import edu.rosehulman.lujasaa.swf.Adapters.CreateStoryGridviewAdapter;
 import edu.rosehulman.lujasaa.swf.Adapters.CreateStoryRecyclerAdapter;
-import edu.rosehulman.lujasaa.swf.Constants;
+import edu.rosehulman.lujasaa.swf.Const;
 import edu.rosehulman.lujasaa.swf.R;
 import edu.rosehulman.lujasaa.swf.User;
 
@@ -42,7 +42,7 @@ public class CreateStoryActivity extends AppCompatActivity implements CreateStor
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(savedInstanceState != null){
-            mStoryRef = new Firebase(savedInstanceState.getString(Constants.FIREBASE));
+            mStoryRef = new Firebase(savedInstanceState.getString(Const.FIREBASE));
         }
 
         setContentView(R.layout.activity_create_story);

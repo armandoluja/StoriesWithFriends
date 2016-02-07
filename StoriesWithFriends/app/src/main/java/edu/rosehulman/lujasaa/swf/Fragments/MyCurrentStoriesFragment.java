@@ -18,7 +18,6 @@ import edu.rosehulman.lujasaa.swf.Activities.CreateStoryActivity;
 import edu.rosehulman.lujasaa.swf.Activities.MainActivity;
 import edu.rosehulman.lujasaa.swf.Adapters.StoryAdapter;
 import edu.rosehulman.lujasaa.swf.Const;
-import edu.rosehulman.lujasaa.swf.Constants;
 import edu.rosehulman.lujasaa.swf.R;
 
 /**
