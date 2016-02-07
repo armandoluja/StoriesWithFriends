@@ -6,17 +6,27 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import com.firebase.client.Firebase;
+
 import edu.rosehulman.lujasaa.swf.R;
 
 /**
- * An example full-screen activity that shows and hides the system UI (i.e.
- * status bar and navigation/system bar) with user interaction.
+ * Game room. Stories are written here.
  */
 public class WriteStoryActivity extends AppCompatActivity {
+
+    public static final String STORY_KEY = "story_key";
+    // The key of the current story to be used/written.
+    // It must be used to retrieve all the story fragments.
+    private String mStoryKey;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Capture the story key
+        mStoryKey = getIntent().getStringExtra(STORY_KEY);
         setContentView(R.layout.activity_write_story);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
