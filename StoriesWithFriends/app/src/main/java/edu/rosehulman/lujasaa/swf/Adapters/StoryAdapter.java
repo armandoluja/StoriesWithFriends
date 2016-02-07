@@ -59,7 +59,6 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.ViewHolder> 
 
     @Override
     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-        Log.d("firebase", "onChildAdded: " + dataSnapshot.getKey());//get the story key Here
         Firebase getStoryRef = new Firebase(Const.STORY_REF + dataSnapshot.getKey());
         getStoryRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

@@ -59,10 +59,10 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder
             @Override
             public void onClick(View v) {
                 if(friendState) {
-                    firebaseRemoveFriend(friendArray.get(position).getUID());
+                    firebaseRemoveFriend(friendArray.get(position).getEmail());
                 }
                 else{
-                    firebaseAddFriend(friendArray.get(position).getUID());
+                    firebaseAddFriend(friendArray.get(position).getEmail());
                 }
             }
         });
@@ -100,7 +100,7 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     Log.d("db", ""+dataSnapshot.getValue());
                     User user = dataSnapshot.getValue(User.class);
-                    user.setUID(dataSnapshot.getKey());
+                    user.setEmail(dataSnapshot.getKey());
                     friendArray.add(user);
                     notifyDataSetChanged();
                 }
@@ -121,7 +121,7 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder
         public void onChildRemoved(DataSnapshot dataSnapshot) {
             String key = dataSnapshot.getKey();
             for(User friend: friendArray){
-                if(key.equals(friend.getUID())){
+                if(key.equals(friend.getEmail())){
                     friendArray.remove(friend);
                     notifyDataSetChanged();
                     return;
@@ -150,7 +150,7 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     User user = dataSnapshot.getValue(User.class);
-                    user.setUID(dataSnapshot.getKey());
+                    user.setEmail(dataSnapshot.getKey());
                     friendArray.add(user);
                     notifyDataSetChanged();
                 }
@@ -171,7 +171,7 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder
         public void onChildRemoved(DataSnapshot dataSnapshot) {
             String key = dataSnapshot.getKey();
             for(User friend: friendArray){
-                if(key.equals(friend.getUID())){
+                if(key.equals(friend.getEmail())){
                     friendArray.remove(friend);
                     notifyDataSetChanged();
                     return;

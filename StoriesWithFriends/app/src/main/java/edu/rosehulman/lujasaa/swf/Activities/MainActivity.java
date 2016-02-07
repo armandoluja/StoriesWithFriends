@@ -53,9 +53,9 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         //load the email and uid from shared prefs
-        SharedPreferences prefs = getSharedPreferences(PREFS,MODE_PRIVATE);
-        mEmail = prefs.getString(AUTH_EMAIL,"");
-        mUID = prefs.getString(AUTH_UID,"");
+        SharedPreferences prefs = getSharedPreferences(PREFS, MODE_PRIVATE);
+        mEmail = prefs.getString(AUTH_EMAIL, "");
+        mUID = prefs.getString(AUTH_UID, "");
 
         Firebase firebase = new Firebase(Const.FIREBASE);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -70,12 +70,12 @@ public class MainActivity extends AppCompatActivity
         if (firebase.getAuth() == null || isExpired(firebase.getAuth())) {
             Intent loginIntent = new Intent(this, LoginActivity.class);
             startActivityForResult(loginIntent, LOGIN_REQUEST_CODE);
-        }else{
+        } else {
             FragmentTransaction ft = mFragmentManager.beginTransaction();
             ft.replace(R.id.fragment_container, new MyCurrentStoriesFragment());
             //clear the backstack so that pressing the back button will exit the application
             int nEntries = getSupportFragmentManager().getBackStackEntryCount();
-            for(int i = 0 ; i < nEntries ; i ++){
+            for (int i = 0; i < nEntries; i++) {
                 mFragmentManager.popBackStackImmediate();
             }
             ft.commit();
@@ -89,27 +89,32 @@ public class MainActivity extends AppCompatActivity
         SharedPreferences prefs = getSharedPreferences(PREFS, MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(AUTH_UID, mUID);
-        editor.putString(AUTH_EMAIL,mEmail);
+        editor.putString(AUTH_EMAIL, mEmail);
         // Put the other fields into the editor
         editor.commit();
     }
 
     @Override
-protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == LOGIN_REQUEST_CODE){
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == LOGIN_REQUEST_CODE) {
             Bundle extras = data.getExtras();
             mUID = extras.getString(AUTH_UID);
             mEmail = extras.getString(AUTH_EMAIL);
+
 //            Log.d("Extras", "onActivityResult 1: " + data.getStringExtra(AUTH_EMAIL) );
 //            Log.d("Extras", "onActivityResult 2: " + extras.getString(AUTH_EMAIL) );
         }
-        super.onActivityResult(requestCode, resultCode, data);
     }
 
     public void onLogout() {
         //TODO: Log the user out.
         Firebase firebase = new Firebase(Const.FIREBASE);
         firebase.unauth();
+        int nEntries = getSupportFragmentManager().getBackStackEntryCount();
+        for (int i = 0; i < nEntries; i++) {
+            mFragmentManager.popBackStackImmediate();
+        }
         Intent loginIntent = new Intent(this, LoginActivity.class);
         startActivityForResult(loginIntent, LOGIN_REQUEST_CODE);
     }
@@ -146,8 +151,6 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     }
 
 
-
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -176,8 +179,8 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
             ft.replace(R.id.fragment_container, switchTo);
             //clear the backstack so that pressing the back button will exit the application
             int nEntries = getSupportFragmentManager().getBackStackEntryCount();
-            for(int i = 0 ; i < nEntries ; i ++){
-               mFragmentManager.popBackStackImmediate();
+            for (int i = 0; i < nEntries; i++) {
+                mFragmentManager.popBackStackImmediate();
             }
             ft.commit();
         }
@@ -193,17 +196,16 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         FragmentTransaction ft = mFragmentManager.beginTransaction();
 
         //doesn't replace if already on the friends tab
-        if(!(mFragmentManager.findFragmentById(R.id.fragment_container) instanceof FriendTopFragment)) {
+        if (!(mFragmentManager.findFragmentById(R.id.fragment_container) instanceof FriendTopFragment)) {
             ft.replace(R.id.fragment_container, new FriendTopFragment());
         }
-        if(friend && !(mFragmentManager.findFragmentById(R.id.fragment_bottom_container) instanceof FriendsFragment)){
+        if (friend && !(mFragmentManager.findFragmentById(R.id.fragment_bottom_container) instanceof FriendsFragment)) {
             ft.replace(R.id.fragment_bottom_container, new FriendsFragment());
-        }
-        else if(!friend && !(mFragmentManager.findFragmentById(R.id.fragment_bottom_container) instanceof FriendRequestFragment)){
+        } else if (!friend && !(mFragmentManager.findFragmentById(R.id.fragment_bottom_container) instanceof FriendRequestFragment)) {
             ft.replace(R.id.fragment_bottom_container, new FriendRequestFragment());
         }
         int nEntries = getSupportFragmentManager().getBackStackEntryCount();
-        for(int i = 0 ; i < nEntries ; i ++){
+        for (int i = 0; i < nEntries; i++) {
             getSupportFragmentManager().popBackStackImmediate();
         }
         ft.commit();

@@ -8,19 +8,30 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 
 import edu.rosehulman.lujasaa.swf.R;
 import edu.rosehulman.lujasaa.swf.User;
 
 /**
+ * Contains the friends that were selected in the CreateStoryActivity.
  * Created by sanderkd on 1/31/2016.
  */
 public class CreateStoryGridviewAdapter extends BaseAdapter{
+
+
     private ArrayList<User> mAddedArray;
     private Context mContext;
+
+    // Called by Create Story activity, to set the member UID's.
+    // A story doesnt know anything about it's members besides their UIDs.
+    public ArrayList<String> getMembersArray(){
+        ArrayList<String> members = new ArrayList<>();
+        for(int i = 0 ;i < mAddedArray.size(); i ++){
+            members.add(mAddedArray.get(i).getEmail());
+        }
+        return members;
+    }
 
     public CreateStoryGridviewAdapter(Context context){
         mContext = context;
@@ -43,7 +54,7 @@ public class CreateStoryGridviewAdapter extends BaseAdapter{
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.activity_create_story_add_friend_view, parent, false);
 //        if(convertView != null){
 //            View view = LayoutInflater.from(mContext).inflate(R.layout.activity_create_story_add_friend_view, parent, false);
@@ -58,7 +69,8 @@ public class CreateStoryGridviewAdapter extends BaseAdapter{
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                mAddedArray.remove(position);
+                notifyDataSetChanged();
             }
         });
 
@@ -71,6 +83,7 @@ public class CreateStoryGridviewAdapter extends BaseAdapter{
     }
 
     public void removeFriend(User user){
-
+        mAddedArray.remove(user);
+        notifyDataSetChanged();
     }
 }

@@ -1,89 +1,179 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#ffffff"
     tools:context="edu.rosehulman.lujasaa.storieswithfriends.CreateStoryActivity"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-
-
-    <Button
-        android:id="@+id/cancel_create_button"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:text="Cancel"
-        android:layout_alignParentBottom="true"
-        android:layout_toLeftOf="@+id/create_story_button"
-        android:layout_toStartOf="@+id/create_story_button" />
-
-    <Button
-        android:id="@+id/create_story_button"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:text="CREATE!"
-        android:layout_marginRight="37dp"
-        android:layout_marginEnd="37dp"
-        android:layout_alignTop="@+id/cancel_create_button"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
 
     <GridView
-        android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:id="@+id/create_story_grid_view"
-        android:numColumns="auto_fit"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:id="@+id/create_story_grid_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:numColumns="auto_fit"
+        android:paddingBottom="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="10dp" />
 
     <android.support.v7.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
         android:id="@+id/create_story_recycler_view"
         android:layout_below="@+id/create_story_grid_view"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_width="match_parent"
+        android:layout_height="150dp" />
 
-    <Spinner
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/create_story_word_limit_spinner"
+
+    <LinearLayout
+        android:id="@+id/linear_layout_story_name"
         android:layout_below="@+id/create_story_recycler_view"
-        android:layout_toRightOf="@+id/textView4"
-        android:layout_toEndOf="@+id/textView4" />
-
-    <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/word_limit"
-        android:textSize="25sp"
-        android:id="@+id/textView4"
-        android:layout_alignTop="@+id/create_story_word_limit_spinner"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:orientation="horizontal">
 
-    <TextView
-        android:layout_width="wrap_content"
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/storyName_edit_text_label"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="0dp"
+            android:text="@string/Story_Name"
+            android:textSize="25sp"
+            android:textStyle="bold" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <EditText
+            android:id="@+id/story_name_edit_text"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_below="@+id/linear_layout_story_name"
+        android:id="@+id/linear_layout_word_limit"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/time_limit"
-        android:layout_below="@+id/textView4"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:textSize="25sp"
-        android:id="@+id/textView5"/>
+        android:orientation="horizontal">
 
-    <Spinner
-        android:layout_width="100dp"
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/word_limit_spinner_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/word_limit"
+            android:textSize="25sp"
+            android:textStyle="bold" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <Spinner
+            android:id="@+id/create_story_word_limit_spinner"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_below="@+id/linear_layout_word_limit"
+        android:id="@+id/linear_layout_time_limit"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/create_story_time_limit_spinner"
-        android:layout_alignTop="@+id/textView5"
-        android:layout_alignLeft="@+id/create_story_word_limit_spinner"
-        android:layout_alignStart="@+id/create_story_word_limit_spinner" />
+        android:orientation="horizontal">
 
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/time_limit_spinner_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/time_limit"
+            android:textSize="25sp"
+            android:textStyle="bold" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <Spinner
+            android:id="@+id/create_story_time_limit_spinner"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_below="@+id/linear_layout_time_limit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/cancel_create_button"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="Cancel" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/create_story_button"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="Create Story!" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+    </LinearLayout>
 </RelativeLayout>

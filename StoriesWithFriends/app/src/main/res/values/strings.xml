@@ -23,10 +23,13 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_create_story">CreateStoryActivity</string>
     <string name="title_activity_write_story">WriteStoryActivity</string>
-    <string name="word_limit">Word Limit</string>
-    <string name="time_limit">Time Limit</string>
+    <string name="word_limit">Word Limit :</string>
+    <string name="time_limit">Time Limit :</string>
     <string name="add_a_friend">Add a friend!</string>
     <string name="Friends">Friends</string>
+    <string name="Story_Name">Story Name :</string>
+    <string name="write_story_send_button">Add to Story</string>
+    <string name="write_story_turn_text">It is your turn!</string>
 
 
     <string-array name="word_limit_array">

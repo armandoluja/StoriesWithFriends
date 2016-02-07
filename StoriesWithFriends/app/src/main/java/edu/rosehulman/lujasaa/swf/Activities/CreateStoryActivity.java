@@ -12,31 +12,43 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.firebase.client.Firebase;
+
+import java.util.ArrayList;
 
 import edu.rosehulman.lujasaa.swf.Adapters.CreateStoryGridviewAdapter;
 import edu.rosehulman.lujasaa.swf.Adapters.CreateStoryRecyclerAdapter;
 import edu.rosehulman.lujasaa.swf.Const;
 import edu.rosehulman.lujasaa.swf.R;
+import edu.rosehulman.lujasaa.swf.Story;
 import edu.rosehulman.lujasaa.swf.User;
 
 /**
- * An example full-screen activity that shows and hides the system UI (i.e.
- * status bar and navigation/system bar) with user interaction.
+ * Story creation, can select friends to join the story, and word limit, as well as time limits.
  */
 public class CreateStoryActivity extends AppCompatActivity implements CreateStoryRecyclerAdapter.Callback{
     private Button mCreateBtn;
     private Button mCancelBtn;
     private Context mContext;
-    private Spinner mWordSpinner;
-    private Spinner mTimeSpinner;
+    private EditText mStoryNameEditText;
+    private Spinner mWordSpinner;// word limit per turn
+
+    private Spinner mTimeSpinner;// time limit per turn disabled for now
+
+    // Used for selecting friends to join the story.
     private GridView mGridView;
     private CreateStoryRecyclerAdapter mRecyclerAdapter;
     private CreateStoryGridviewAdapter mGridviewAdapter;
+
     private Firebase mStoryRef;
+
+    //The key belonging to the newly created story.
+    private String mStoryKey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +65,7 @@ public class CreateStoryActivity extends AppCompatActivity implements CreateStor
         mContext = getBaseContext();
         mCreateBtn = (Button)findViewById(R.id.create_story_button);
         mCancelBtn = (Button)findViewById(R.id.cancel_create_button);
+        mStoryNameEditText = (EditText)findViewById(R.id.story_name_edit_text);
         mWordSpinner = (Spinner)findViewById(R.id.create_story_word_limit_spinner);
         mTimeSpinner = (Spinner)findViewById(R.id.create_story_time_limit_spinner);
 
@@ -82,8 +95,11 @@ public class CreateStoryActivity extends AppCompatActivity implements CreateStor
         mCreateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent writeStory = new Intent(mContext, WriteStoryActivity.class);
-                startActivity(writeStory);
+                if(createStory()){
+                    Intent writeStory = new Intent(mContext, WriteStoryActivity.class);
+                    writeStory.putExtra(WriteStoryActivity.STORY_KEY,mStoryKey);
+                    startActivity(writeStory);
+                }
             }
         });
 
@@ -95,6 +111,54 @@ public class CreateStoryActivity extends AppCompatActivity implements CreateStor
         });
 
 
+    }
+
+    /**
+     * Captures the current settings that the user has specified and creates a story object,
+     * then it pushes that story object to the story path in firebase.
+     * It also adds that story's key to every user that was added to the story.
+     * Returns true if a story was created.
+     * ie. (/user/<Storykey: true>)
+     */
+    private boolean createStory() {
+        ArrayList<String> members = mGridviewAdapter.getMembersArray();// An array of EMAILS of OTHER USERS
+        if(members.size() < 1){
+            Toast.makeText(CreateStoryActivity.this, "You must invite at least one friend.", Toast.LENGTH_SHORT).show();
+            return false;// must have at least one other person
+        }
+        // MUST ADD THE OWNER AS WELL, BECAUSE THE ADAPTER SHOULDN'T.
+        String owner = MainActivity.mEmail;
+        members.add(owner);
+
+        String storyName = mStoryNameEditText.getText().toString();
+        if(storyName.equals("")){
+            Toast.makeText(CreateStoryActivity.this, "Enter a name for your masterpiece!", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        int wordLimit = Integer.parseInt(mWordSpinner.getSelectedItem().toString());
+        //I know the variables below are redundant, but i wanted to specify what each parameter means.
+        String currentTurn = MainActivity.mEmail;
+        boolean isCompleted = false;
+        int mode = 0;
+
+        Story newStory = new Story(members,owner,isCompleted,mode,storyName,currentTurn,wordLimit);
+
+        Firebase storyRef = new Firebase(Const.STORY_REF);
+        Firebase storyPush = storyRef.push();// create a key
+        mStoryKey = storyPush.getKey();
+        newStory.setKey(mStoryKey);// IMPORTANT: STORY THE KEY, use it later(below)
+        storyPush.setValue(newStory);// create the story at this key's path
+
+
+        // For each user, need to push the story's existence,
+        // Firebase path: Const.USERS_REF/ email /stories/ <storykey>/
+        // set value (true)
+        for(int i = 0 ; i < members.size(); i ++){
+            Firebase userStoriesRef = new Firebase(Const.USER_REF + members.get(i) + "/stories/"+mStoryKey+"/");
+            userStoriesRef.setValue(true);
+        }
+        return true;
     }
 
     @Override

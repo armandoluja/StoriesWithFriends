@@ -16,7 +16,7 @@ public class User {
     @JsonIgnore
     private ArrayList<String> stories;
     @JsonIgnore
-    private String UID;
+    private String email;
 
     public User(){
         //required empty constructor
@@ -52,11 +52,11 @@ public class User {
         this.stories = vals.stories;
     }
 
-    public String getUID() {
-        return UID;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUID(String UID) {
-        this.UID = UID;
+    public void setEmail(String email) {
+        this.email = email;
     }
 }
