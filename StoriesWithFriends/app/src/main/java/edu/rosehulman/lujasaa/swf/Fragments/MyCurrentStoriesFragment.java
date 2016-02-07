@@ -34,8 +34,8 @@ public class MyCurrentStoriesFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mStoriesRef = new Firebase(Const.USER_REF + MainActivity.mEmail+"/stories");
-        Log.d("firebase", "email: "+ Const.USER_REF + MainActivity.mEmail+"/stories");
+        mStoriesRef = new Firebase(Const.USER_REF + MainActivity.mEmail+"/stories/");
+        Log.d("firebase", "email: "+ Const.USER_REF + MainActivity.mEmail+"/stories/");
     }
 
     @Override
@@ -64,14 +64,13 @@ public class MyCurrentStoriesFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        mStoriesRef.removeEventListener(mAdapter);
+
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mAdapter.clear();
-        mStoriesRef.addChildEventListener(mAdapter);
+
     }
 
 }

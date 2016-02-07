@@ -26,7 +26,7 @@ import edu.rosehulman.lujasaa.swf.Story;
 /**
  * Created by sanderkd on 1/17/2016.
  */
-public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.ViewHolder> implements ChildEventListener{
+public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.ViewHolder>{
     private final LayoutInflater mInflator;
     private Firebase mFirebase;
     private ArrayList<Story> mStories;
@@ -38,6 +38,7 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.ViewHolder> 
         mStories = new ArrayList<>();
         mFirebase = firebaseRef;
         mContext = context;
+        mFirebase.addChildEventListener(new MyStoryChildEventListener());
     }
 
     @Override
@@ -57,45 +58,6 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.ViewHolder> 
         return mStories.size();
     }
 
-    @Override
-    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-        Firebase getStoryRef = new Firebase(Const.STORY_REF + dataSnapshot.getKey());
-        getStoryRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Story s = dataSnapshot.getValue(Story.class);
-                s.setKey(dataSnapshot.getKey());
-                mStories.add(s);
-                notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
-
-    }
-
-    @Override
-    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-    }
-
-    @Override
-    public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-    }
-
-    @Override
-    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-    }
-
-    @Override
-    public void onCancelled(FirebaseError firebaseError) {
-
-    }
 
     public void clear(){
         mStories.clear();
@@ -135,6 +97,47 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.ViewHolder> 
             Intent writeStoryIntent = new Intent(mContext,WriteStoryActivity.class);
             writeStoryIntent.putExtra(WriteStoryActivity.STORY_KEY,mStoryKey);//pass the story key to get story fragments
             mContext.startActivity(writeStoryIntent);
+        }
+    }
+
+    private class MyStoryChildEventListener implements ChildEventListener {
+        @Override
+        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+            Firebase getStoryRef = new Firebase(Const.STORY_REF + dataSnapshot.getKey());
+            getStoryRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Story s = dataSnapshot.getValue(Story.class);
+                    s.setKey(dataSnapshot.getKey());
+                    mStories.add(s);
+                    notifyDataSetChanged();
+                }
+
+                @Override
+                public void onCancelled(FirebaseError firebaseError) {
+
+                }
+            });
+        }
+
+        @Override
+        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+        }
+
+        @Override
+        public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+        }
+
+        @Override
+        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+        }
+
+        @Override
+        public void onCancelled(FirebaseError firebaseError) {
+
         }
     }
 }

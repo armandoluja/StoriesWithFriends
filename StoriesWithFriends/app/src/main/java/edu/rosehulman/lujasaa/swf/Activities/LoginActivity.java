@@ -17,8 +17,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.firebase.client.AuthData;
+import com.firebase.client.ChildEventListener;
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
@@ -31,9 +34,11 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import edu.rosehulman.lujasaa.swf.Const;
 import edu.rosehulman.lujasaa.swf.R;
+import edu.rosehulman.lujasaa.swf.User;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
@@ -48,6 +53,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private GoogleApiClient mGoogleApiClient;
     private String mEmailAddress;
     private String mDisplayName;
+    private User mUser;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -248,6 +254,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         //stuff that happens when someone logs in
         Firebase firebase = new Firebase(Const.FIREBASE);
         //must write the auth result handler
+        mDisplayName = "Default Username";
         firebase.authWithPassword(email, password, new MyAuthResultHandler());
     }
 
@@ -256,9 +263,24 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         public void onAuthenticated(AuthData authData) {
             Intent returnIntent = new Intent();
             mEmailAddress = mEmailAddress.replace('.','%');
-            Log.d("firebase", "Login Activity My authResult handler : onAuthenticated: "+ mEmailAddress);
+            Log.d("firebase", "Login Activity My authResult handler : onAuthenticated: " + mEmailAddress);
             returnIntent.putExtra(MainActivity.AUTH_UID, authData.getUid());
             returnIntent.putExtra(MainActivity.AUTH_EMAIL, mEmailAddress);
+
+            /**
+             * Check if the user is already registered, if not, register them
+             * with the default registration settings.
+             */
+            Firebase checkUserNameAndIcon = new Firebase(Const.USER_REF);
+            if(checkUserNameAndIcon.child(mEmailAddress) == null){
+                /**
+                 * Create a default user.
+                 */
+                mUser = new User();
+                mUser.setDisplayName(mDisplayName);
+                mUser.setIcon("defaultIcon");
+                checkUserNameAndIcon.child(mEmailAddress).setValue(mUser);
+            }
             setResult(Activity.RESULT_OK, returnIntent);
             finish();
         }

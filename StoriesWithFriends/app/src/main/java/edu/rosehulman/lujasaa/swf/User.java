@@ -18,7 +18,7 @@ public class User {
     @JsonIgnore
     private String email;
 
-    public User(){
+    public User() {
         //required empty constructor
     }
 
@@ -46,7 +46,7 @@ public class User {
         this.stories = stories;
     }
 
-    public void setValues(User vals){
+    public void setValues(User vals) {
         this.displayName = vals.displayName;
         this.icon = vals.icon;
         this.stories = vals.stories;

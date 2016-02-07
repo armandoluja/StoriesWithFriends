@@ -131,7 +131,7 @@ public class CreateStoryActivity extends AppCompatActivity implements CreateStor
         members.add(owner);
 
         String storyName = mStoryNameEditText.getText().toString();
-        if(storyName.equals("")){
+        if(storyName.equals("") || storyName == null){
             Toast.makeText(CreateStoryActivity.this, "Enter a name for your masterpiece!", Toast.LENGTH_SHORT).show();
             return false;
         }

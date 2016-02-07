@@ -2,28 +2,22 @@ package edu.rosehulman.lujasaa.swf.Activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
-import android.view.View;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.firebase.client.AuthData;
-import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
 
 import edu.rosehulman.lujasaa.swf.Const;
 import edu.rosehulman.lujasaa.swf.Fragments.FriendRequestFragment;
@@ -102,6 +96,16 @@ public class MainActivity extends AppCompatActivity
             mUID = extras.getString(AUTH_UID);
             mEmail = extras.getString(AUTH_EMAIL);
 
+            Firebase.setAndroidContext(this);
+            mFragmentManager = getSupportFragmentManager();
+            FragmentTransaction ft = mFragmentManager.beginTransaction();
+            ft.replace(R.id.fragment_container, new MyCurrentStoriesFragment());
+            //clear the backstack so that pressing the back button will exit the application
+            int nEntries = getSupportFragmentManager().getBackStackEntryCount();
+            for (int i = 0; i < nEntries; i++) {
+                mFragmentManager.popBackStackImmediate();
+            }
+            ft.commit();
 //            Log.d("Extras", "onActivityResult 1: " + data.getStringExtra(AUTH_EMAIL) );
 //            Log.d("Extras", "onActivityResult 2: " + extras.getString(AUTH_EMAIL) );
         }
