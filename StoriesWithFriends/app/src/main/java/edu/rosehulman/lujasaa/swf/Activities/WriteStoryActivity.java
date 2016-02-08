@@ -210,6 +210,7 @@ public class WriteStoryActivity extends AppCompatActivity {
             } else {
                 mAddToStoryButton.setEnabled(false);
             }
+            setTitle("Writing in: \"" + mStory.getStoryname()+"\"");
         }
 
         @Override

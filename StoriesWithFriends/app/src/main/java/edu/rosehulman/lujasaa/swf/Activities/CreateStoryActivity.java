@@ -53,6 +53,7 @@ public class CreateStoryActivity extends AppCompatActivity implements CreateStor
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTitle("Create a story:");
         if(savedInstanceState != null){
             mStoryRef = new Firebase(savedInstanceState.getString(Const.FIREBASE));
         }

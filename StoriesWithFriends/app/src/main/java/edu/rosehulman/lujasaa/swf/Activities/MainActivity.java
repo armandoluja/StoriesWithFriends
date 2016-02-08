@@ -167,14 +167,19 @@ public class MainActivity extends AppCompatActivity
             // Handle the camera action
             Log.d("firebase", "printing out email from mainactivity: " + mEmail);
             switchTo = new MyCurrentStoriesFragment();
+            setTitle("SWF: My Current Stories");
         } else if (id == R.id.nav_completed_stories) {
             switchTo = new MyCompletedStoriesFragment();
+            setTitle("SWF: My Completed Stories");
+
         } else if (id == R.id.nav_friends) {
             friendFragment(true);
+            setTitle("SWF: Friends");
         } else if (id == R.id.nav_settings) {
             Intent settingsIntent = new Intent(this, SettingsActivity.class);
             startActivity(settingsIntent);
         } else if (id == R.id.nav_logout) {
+            setTitle("Stories With Friends");
             onLogout();
         }
 

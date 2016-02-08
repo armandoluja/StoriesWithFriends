@@ -16,7 +16,7 @@ import com.firebase.client.Firebase;
 
 import edu.rosehulman.lujasaa.swf.Activities.CreateStoryActivity;
 import edu.rosehulman.lujasaa.swf.Activities.MainActivity;
-import edu.rosehulman.lujasaa.swf.Adapters.StoryAdapter;
+import edu.rosehulman.lujasaa.swf.Adapters.CurrentStoriesAdapter;
 import edu.rosehulman.lujasaa.swf.Const;
 import edu.rosehulman.lujasaa.swf.R;
 
@@ -24,7 +24,7 @@ import edu.rosehulman.lujasaa.swf.R;
  * A simple {@link Fragment} subclass.
  */
 public class MyCurrentStoriesFragment extends Fragment {
-    private StoryAdapter mAdapter;
+    private CurrentStoriesAdapter mAdapter;
     private Firebase mStoriesRef;
 
     public MyCurrentStoriesFragment() {
@@ -42,12 +42,13 @@ public class MyCurrentStoriesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
         View view = inflater.inflate(R.layout.fragment_my_current_stories, container, false);
         RecyclerView storyList = (RecyclerView)view.findViewById(R.id.current_stories_recyler_view);
         LinearLayoutManager manager = new LinearLayoutManager(getActivity());
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         storyList.setLayoutManager(manager);
-        mAdapter = new StoryAdapter(getActivity(), mStoriesRef);
+        mAdapter = new CurrentStoriesAdapter(getActivity(), mStoriesRef);
         storyList.setAdapter(mAdapter);
 
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
@@ -59,18 +60,6 @@ public class MyCurrentStoriesFragment extends Fragment {
             }
         });
         return view;
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
     }
 
 }
