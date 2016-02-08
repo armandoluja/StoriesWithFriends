@@ -1,12 +1,16 @@
 package edu.rosehulman.lujasaa.swf.Fragments;
 
 
+import android.app.Dialog;
 import android.app.DownloadManager;
 import android.app.SearchManager;
 import android.app.SearchableInfo;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -34,6 +38,7 @@ import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
+import edu.rosehulman.lujasaa.swf.Activities.MainActivity;
 import edu.rosehulman.lujasaa.swf.Adapters.FriendAdapter;
 import edu.rosehulman.lujasaa.swf.Const;
 import edu.rosehulman.lujasaa.swf.R;
@@ -67,10 +72,10 @@ public class FriendsFragment extends Fragment {
         RecyclerView rv = (RecyclerView) view.findViewById(R.id.friend_recycler_view);
         rv.setLayoutManager(new LinearLayoutManager(getActivity()));
         rv.hasFixedSize();
-        mAdapter = new FriendAdapter(true);
+        mAdapter = new FriendAdapter(this);
         rv.setAdapter(mAdapter);
         firebase = new Firebase(Const.USER_REF);
-        firebase.addChildEventListener(new MyListener());
+        firebase.addChildEventListener(new MyListener(view));
         mValues = new ArrayList<>();
         mUsers = new ArrayList<>();
         searchValues = new ArrayList<>();
@@ -129,8 +134,9 @@ public class FriendsFragment extends Fragment {
 
     class MyListener implements ChildEventListener {
 
-        MyListener(){
-
+        private View mView;
+        MyListener(View view){
+            mView = view;
         }
         @Override
         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -169,6 +175,8 @@ public class FriendsFragment extends Fragment {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     mAdapter.firebaseSendFriendRequest(searchValues.get(position).getEmail());
+                    Toast toast = Toast.makeText(getContext(), getString(R.string.friend_request_sent), Toast.LENGTH_SHORT);
+                    toast.show();
                 }
             });
         } else {

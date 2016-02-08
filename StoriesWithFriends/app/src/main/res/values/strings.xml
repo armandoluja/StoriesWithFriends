@@ -30,6 +30,10 @@
     <string name="Story_Name">Story Name :</string>
     <string name="write_story_send_button">Add to Story</string>
     <string name="write_story_turn_text">It is your turn!</string>
+    <string name="no_friends">You have no friend requests</string>
+    <string name="game_mode_text">Game Mode:</string>
+    <string name="friend_request_sent">Friend request sent</string>
+    <string name="delete_friend_dialog">"Are you sure you want to delete %s"</string>
 
 
     <string-array name="word_limit_array">
@@ -49,6 +53,11 @@
         <item>1 hour</item>
         <item>24 hours</item>
         <item>Unlimited</item>
+    </string-array>
+
+    <string-array name="story_mode_array">
+        <item>Round Robin</item>
+        <item>Random</item>
     </string-array>
 
 </resources>
