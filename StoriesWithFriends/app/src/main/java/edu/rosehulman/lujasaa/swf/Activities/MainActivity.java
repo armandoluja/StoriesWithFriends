@@ -38,6 +38,9 @@ public class MainActivity extends AppCompatActivity
     public static String mEmail;
     private FragmentManager mFragmentManager;
 
+    private FriendsFragment friendFragment;
+    private FriendRequestFragment friendRequestFragment;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +77,8 @@ public class MainActivity extends AppCompatActivity
             }
             ft.commit();
         }
+        friendFragment = new FriendsFragment();
+        friendRequestFragment = new FriendRequestFragment();
     }
 
     // store the email and uid
@@ -106,8 +111,6 @@ public class MainActivity extends AppCompatActivity
                 mFragmentManager.popBackStackImmediate();
             }
             ft.commit();
-//            Log.d("Extras", "onActivityResult 1: " + data.getStringExtra(AUTH_EMAIL) );
-//            Log.d("Extras", "onActivityResult 2: " + extras.getString(AUTH_EMAIL) );
         }
     }
 
@@ -164,7 +167,6 @@ public class MainActivity extends AppCompatActivity
         Fragment switchTo = null;
 
         if (id == R.id.nav_current_stories) {
-            // Handle the camera action
             Log.d("firebase", "printing out email from mainactivity: " + mEmail);
             switchTo = new MyCurrentStoriesFragment();
             setTitle("SWF: My Current Stories");
@@ -209,15 +211,19 @@ public class MainActivity extends AppCompatActivity
             ft.replace(R.id.fragment_container, new FriendTopFragment());
         }
         if (friend && !(mFragmentManager.findFragmentById(R.id.fragment_bottom_container) instanceof FriendsFragment)) {
-            ft.replace(R.id.fragment_bottom_container, new FriendsFragment());
+            ft.replace(R.id.fragment_bottom_container, friendFragment);
         } else if (!friend && !(mFragmentManager.findFragmentById(R.id.fragment_bottom_container) instanceof FriendRequestFragment)) {
-            ft.replace(R.id.fragment_bottom_container, new FriendRequestFragment());
+            ft.replace(R.id.fragment_bottom_container, friendRequestFragment);
         }
         int nEntries = getSupportFragmentManager().getBackStackEntryCount();
         for (int i = 0; i < nEntries; i++) {
             getSupportFragmentManager().popBackStackImmediate();
         }
         ft.commit();
+    }
+
+    public FragmentManager getmFragmentManager(){
+        return mFragmentManager;
     }
 
     @Override

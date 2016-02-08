@@ -135,7 +135,7 @@ public class WriteStoryActivity extends AppCompatActivity {
     private void updateStoryTextView() {
         StringBuilder fullStory = new StringBuilder();
         for (int i = 0; i < mStoryFragments.size(); i++) {
-            fullStory.append(mStoryFragments.get(i).getText());
+            fullStory.append(mStoryFragments.get(i).getText() + " ");
         }
         mStoryTextView.setText(fullStory.toString());
     }
@@ -181,6 +181,7 @@ public class WriteStoryActivity extends AppCompatActivity {
                             break;
                     }
                 }
+                mEditText.setText("");
                 mStoryRef.child("storyTurn").setValue(nextTurn);
             } else {
                 Toast.makeText(getBaseContext(), "It isn't your turn!", Toast.LENGTH_SHORT).show();

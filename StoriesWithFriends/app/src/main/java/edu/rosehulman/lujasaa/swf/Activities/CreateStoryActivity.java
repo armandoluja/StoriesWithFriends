@@ -39,6 +39,7 @@ public class CreateStoryActivity extends AppCompatActivity implements CreateStor
     private Spinner mWordSpinner;// word limit per turn
 
     private Spinner mTimeSpinner;// time limit per turn disabled for now
+    private Spinner mStoryModeSpinner;
 
     // Used for selecting friends to join the story.
     private GridView mGridView;
@@ -69,6 +70,7 @@ public class CreateStoryActivity extends AppCompatActivity implements CreateStor
         mStoryNameEditText = (EditText)findViewById(R.id.story_name_edit_text);
         mWordSpinner = (Spinner)findViewById(R.id.create_story_word_limit_spinner);
         mTimeSpinner = (Spinner)findViewById(R.id.create_story_time_limit_spinner);
+        mStoryModeSpinner = (Spinner) findViewById(R.id.story_mode_spinner);
 
         mGridView = (GridView)findViewById(R.id.create_story_grid_view);
         mGridviewAdapter = new CreateStoryGridviewAdapter(this);
@@ -87,10 +89,15 @@ public class CreateStoryActivity extends AppCompatActivity implements CreateStor
                 R.array.word_limit_array, android.R.layout.simple_spinner_item);
         ArrayAdapter<CharSequence> timeLimitAdapter = ArrayAdapter.createFromResource(this,
                 R.array.time_limit_array, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> storyModeAdapter = ArrayAdapter.createFromResource(this,
+                R.array.story_mode_array, android.R.layout.simple_spinner_item);
         wordLimitAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         timeLimitAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        storyModeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mWordSpinner.setAdapter(wordLimitAdapter);
         mTimeSpinner.setAdapter(timeLimitAdapter);
+        mStoryModeSpinner.setAdapter(storyModeAdapter);
+
 
 
         mCreateBtn.setOnClickListener(new View.OnClickListener() {
@@ -141,7 +148,7 @@ public class CreateStoryActivity extends AppCompatActivity implements CreateStor
         //I know the variables below are redundant, but i wanted to specify what each parameter means.
         String currentTurn = MainActivity.mEmail;
         boolean isCompleted = false;
-        int mode = 0;
+        int mode = mStoryModeSpinner.getSelectedItemPosition();
 
         Story newStory = new Story(members,owner,isCompleted,mode,storyName,currentTurn,wordLimit);
 
