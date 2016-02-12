@@ -27,6 +27,7 @@ import edu.rosehulman.lujasaa.swf.Const;
 import edu.rosehulman.lujasaa.swf.R;
 import edu.rosehulman.lujasaa.swf.Story;
 import edu.rosehulman.lujasaa.swf.StoryFragment;
+import edu.rosehulman.lujasaa.swf.User;
 
 /**
  * Game room. Stories are written here.
@@ -36,6 +37,7 @@ public class WriteStoryActivity extends AppCompatActivity {
     public static final String STORY_KEY = "story_key";
     // The key of the current story to be used/written.
     // It must be used to retrieve all the story fragments.
+    private Firebase mUserRef;
     private Firebase mStoryFragmentRef;
     private Firebase mStoryRef;
     private String mStoryKey;
@@ -46,6 +48,7 @@ public class WriteStoryActivity extends AppCompatActivity {
     private TextView mStoryTextView;
 
     private String mCurrentTurn;//the email of the player who currently has a turn
+    private String mCurrentTurnString;
 
     // Contains every members's contributions to the story
     private ArrayList<StoryFragment> mStoryFragments = new ArrayList<StoryFragment>();
@@ -80,6 +83,8 @@ public class WriteStoryActivity extends AppCompatActivity {
         // Get the story, listen for changes in players' turns
         mStoryRef = new Firebase(Const.STORY_REF + mStoryKey);
         mStoryRef.addValueEventListener(new StoryChildEventListener());
+
+        mUserRef = new Firebase(Const.USER_REF);
 
     }
 
@@ -199,12 +204,31 @@ public class WriteStoryActivity extends AppCompatActivity {
             Log.d("firebase", "onChildAdded: " + dataSnapshot.getValue());
             mStory = dataSnapshot.getValue(Story.class);
             mCurrentTurn = mStory.getStoryTurn();
-            mWordLimit = mStory.getWordlimit();
+
+
             if (mCurrentTurn.equals(mEmail)) {
                 mTextViewCurrentTurn.setText(R.string.write_story_turn_text);
-            } else {
-                mTextViewCurrentTurn.setText("It is " + mCurrentTurn + "'s turn.");
+            } else { //get display name
+                mUserRef.child(mCurrentTurn).child("displayName").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Log.d("writeStory", dataSnapshot.toString());
+                        mCurrentTurnString = (String) dataSnapshot.getValue();
+                        if(mCurrentTurnString.charAt(mCurrentTurnString.length() -1) == ('s')){ //take off 's if name ends in s
+                            mTextViewCurrentTurn.setText("It is " + mCurrentTurnString + " turn.");
+                        } else {
+                            mTextViewCurrentTurn.setText("It is " + mCurrentTurnString + "'s turn."); //add
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                });
             }
+            mWordLimit = mStory.getWordlimit();
+
 
             if (mCurrentTurn.equals(mEmail)) {
                 mAddToStoryButton.setEnabled(true);

@@ -39,14 +39,16 @@
     <TextView
         android:layout_width="match_parent"
         android:paddingRight="10dp"
-        android:textAlignment="center"
+        android:gravity="start"
+        android:textAlignment="viewStart"
         android:paddingLeft="10dp"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Story content goes here"
         android:id="@+id/story_text_view"
+        android:layout_marginTop="27dp"
         android:layout_below="@+id/write_story_activity_current_turn_textview"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="61dp" />
+        android:layout_alignRight="@+id/button_add_to_story"
+        android:layout_alignEnd="@+id/button_add_to_story" />
 
 </RelativeLayout>
