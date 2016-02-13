@@ -60,4 +60,14 @@
         <item>Random</item>
     </string-array>
 
+    <!--colors-->
+    <string name="red">#D12E26</string>
+    <string name="yellow">#B7D126</string>
+    <string name="purple">#5B0D8F</string>
+    <string name="green">#26D131</string>
+    <string name="blue">#268DD1</string>
+    <string name="magenta">#D126C6</string>
+    <string name="black">#000000</string>
+    <string name="brown">#8B4513</string>
+
 </resources>

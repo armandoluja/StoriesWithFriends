@@ -1,0 +1,34 @@
+.red{
+
+    color: #D12E26;
+}
+.yellow{
+    color:#B7D126;
+}
+.purple{
+    color: #5B0D8F;
+}
+.green{
+    color: #26D131;
+}
+.blue{
+    color: #268DD1;
+}
+.magenta{
+    color: #D126C6;
+}
+.black{
+    color: #000000;
+}
+.brown{
+    color: #8B4513;
+}
+.centered{
+    text-align: center;
+}
+.box {
+    float: left;
+    width: 20px;
+    height: 20px;
+    margin: 5px;
+}

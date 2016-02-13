@@ -13,4 +13,6 @@ public class Const {
     public static String REPO_REF = FIREBASE + "/repo/";
     public static String STORY_REF = FIREBASE + "/story/";
     public static String STORY_FRAGMENTS_REF = FIREBASE + "/fragments/";
+
+    public static String[] CSS_COLOR_CHOICES = {"red", "yellow", "purple", "green", "blue", "magenta", "black", "brown"};
 }
