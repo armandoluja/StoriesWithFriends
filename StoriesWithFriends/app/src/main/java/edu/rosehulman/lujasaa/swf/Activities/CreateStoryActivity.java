@@ -8,6 +8,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -17,6 +18,7 @@ import android.widget.GridView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.batch.android.Batch;
 import com.firebase.client.Firebase;
 
 import java.util.ArrayList;
@@ -52,8 +54,33 @@ public class CreateStoryActivity extends AppCompatActivity implements CreateStor
     private String mStoryKey;
 
     @Override
+    protected void onStop() {
+        Batch.onStop(this);
+        super.onStop();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        Batch.onNewIntent(this, intent);
+        super.onNewIntent(intent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        Batch.onDestroy(this);
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Batch.onStart(this);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("batch", "onCreate: ----- CREATE STORY WAS CALLED ----");
         setTitle("Create a story:");
         if(savedInstanceState != null){
             mStoryRef = new Firebase(savedInstanceState.getString(Const.FIREBASE));

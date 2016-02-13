@@ -1,6 +1,7 @@
 package edu.rosehulman.lujasaa.swf.Activities;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,6 +11,8 @@ import android.view.View;
 import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
 
+import com.batch.android.Batch;
+
 import edu.rosehulman.lujasaa.swf.R;
 
 /**
@@ -17,6 +20,31 @@ import edu.rosehulman.lujasaa.swf.R;
  * status bar and navigation/system bar) with user interaction.
  */
 public class SettingsActivity extends AppCompatActivity {
+
+
+    @Override
+    protected void onStop() {
+        Batch.onStop(this);
+        super.onStop();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        Batch.onNewIntent(this, intent);
+        super.onNewIntent(intent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        Batch.onDestroy(this);
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Batch.onStart(this);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

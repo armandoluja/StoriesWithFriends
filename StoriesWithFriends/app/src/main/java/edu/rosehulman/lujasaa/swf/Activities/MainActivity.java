@@ -16,6 +16,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.batch.android.Batch;
+import com.batch.android.Config;
 import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
 
@@ -41,11 +43,11 @@ public class MainActivity extends AppCompatActivity
     private FriendsFragment friendFragment;
     private FriendRequestFragment friendRequestFragment;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Firebase.setAndroidContext(this);
+//        Firebase.setAndroidContext(this);
+        Log.d("batch", "onCreate: ----- MAIN WAS CALLED ----");
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -54,7 +56,8 @@ public class MainActivity extends AppCompatActivity
         mEmail = prefs.getString(AUTH_EMAIL, "");
         mUID = prefs.getString(AUTH_UID, "");
 
-        Firebase firebase = new Firebase(Const.FIREBASE);
+        mFragmentManager = getSupportFragmentManager();
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -63,11 +66,24 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        mFragmentManager = getSupportFragmentManager();
+
+        friendFragment = new FriendsFragment();
+        friendRequestFragment = new FriendRequestFragment();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Batch.onStart(this);
+
+        Firebase firebase = new Firebase(Const.FIREBASE);
+        Log.d("batch","on start was called ------: ");
         if (firebase.getAuth() == null || isExpired(firebase.getAuth())) {
+            Log.d("batch","Main> Firebase NOT authenticated");
             Intent loginIntent = new Intent(this, LoginActivity.class);
             startActivityForResult(loginIntent, LOGIN_REQUEST_CODE);
         } else {
+            Batch.User.getEditor().setIdentifier(firebase.getAuth().getUid());
             FragmentTransaction ft = mFragmentManager.beginTransaction();
             ft.replace(R.id.fragment_container, new MyCurrentStoriesFragment());
             //clear the backstack so that pressing the back button will exit the application
@@ -77,14 +93,13 @@ public class MainActivity extends AppCompatActivity
             }
             ft.commit();
         }
-        friendFragment = new FriendsFragment();
-        friendRequestFragment = new FriendRequestFragment();
     }
 
     // store the email and uid
     @Override
     protected void onPause() {
         super.onPause();
+        Log.d("batch","Main.OnPause was called.");
         SharedPreferences prefs = getSharedPreferences(PREFS, MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(AUTH_UID, mUID);
@@ -97,11 +112,13 @@ public class MainActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == LOGIN_REQUEST_CODE) {
+            Log.d("batch", "Main.OnActivity result was called");
+
             Bundle extras = data.getExtras();
             mUID = extras.getString(AUTH_UID);
             mEmail = extras.getString(AUTH_EMAIL);
 
-            Firebase.setAndroidContext(this);
+//        Firebase.setAndroidContext(this);
             mFragmentManager = getSupportFragmentManager();
             FragmentTransaction ft = mFragmentManager.beginTransaction();
             ft.replace(R.id.fragment_container, new MyCurrentStoriesFragment());
@@ -122,8 +139,12 @@ public class MainActivity extends AppCompatActivity
         for (int i = 0; i < nEntries; i++) {
             mFragmentManager.popBackStackImmediate();
         }
-        Intent loginIntent = new Intent(this, LoginActivity.class);
-        startActivityForResult(loginIntent, LOGIN_REQUEST_CODE);
+        Batch.User.getEditor().setIdentifier(null);
+        mEmail = null;
+        mUID = null;
+        this.onStart();
+//        Intent loginIntent = new Intent(this, LoginActivity.class);
+//        startActivityForResult(loginIntent, LOGIN_REQUEST_CODE);
     }
 
     private boolean isExpired(AuthData authData) {
@@ -230,4 +251,25 @@ public class MainActivity extends AppCompatActivity
     public void onFragmentInteraction(Boolean friend) {
         friendFragment(friend);
     }
+
+
+    @Override
+    protected void onStop() {
+        Batch.onStop(this);
+        super.onStop();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        Batch.onNewIntent(this, intent);
+        super.onNewIntent(intent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        Batch.onDestroy(this);
+        super.onDestroy();
+    }
+
+
 }

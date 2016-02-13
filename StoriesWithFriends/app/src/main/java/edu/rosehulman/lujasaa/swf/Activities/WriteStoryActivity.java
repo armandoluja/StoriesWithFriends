@@ -1,5 +1,6 @@
 package edu.rosehulman.lujasaa.swf.Activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
@@ -12,6 +13,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.batch.android.Batch;
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -55,10 +57,36 @@ public class WriteStoryActivity extends AppCompatActivity {
     private int mWordLimit;
     private Story mStory;
 
+
+    @Override
+    protected void onStop() {
+        Batch.onStop(this);
+        super.onStop();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        Batch.onNewIntent(this, intent);
+        super.onNewIntent(intent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        Batch.onDestroy(this);
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Batch.onStart(this);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_write_story);
+        Log.d("batch", "onCreate: ----- WRITE STORY WAS CALLED ----");
         mEmail = MainActivity.mEmail;
         Log.d("TAG", "MainActivity.mEmail: " + MainActivity.mEmail);
 
@@ -214,7 +242,7 @@ public class WriteStoryActivity extends AppCompatActivity {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Log.d("writeStory", dataSnapshot.toString());
                         mCurrentTurnString = (String) dataSnapshot.getValue();
-                        if(mCurrentTurnString.charAt(mCurrentTurnString.length() -1) == ('s')){ //take off 's if name ends in s
+                        if (mCurrentTurnString.charAt(mCurrentTurnString.length() - 1) == ('s')) { //take off 's if name ends in s
                             mTextViewCurrentTurn.setText("It is " + mCurrentTurnString + " turn.");
                         } else {
                             mTextViewCurrentTurn.setText("It is " + mCurrentTurnString + "'s turn."); //add

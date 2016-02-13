@@ -13,4 +13,6 @@ public class Const {
     public static String REPO_REF = FIREBASE + "/repo/";
     public static String STORY_REF = FIREBASE + "/story/";
     public static String STORY_FRAGMENTS_REF = FIREBASE + "/fragments/";
+    public static String BATCH_PUSH_NOTIFICATIONS_API_KEY = "DEV56BE5E9744714DB835827E8FE9C";
+    public static String GOOGLE_STORIES_WITH_FRIENDS_PROJECT_NUMBER = "658592650920";
 }
