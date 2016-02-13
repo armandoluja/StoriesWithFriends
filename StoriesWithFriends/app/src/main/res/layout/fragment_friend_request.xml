@@ -1,22 +1,47 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="edu.rosehulman.lujasaa.swf.Fragments.FriendRequestFragment">
-
-    <android.support.v7.widget.RecyclerView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/friend_request_recycler_view"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="33dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/no_friends"
         android:id="@+id/no_friends_text"
-        android:layout_marginTop="33dp"
-        android:layout_gravity="center_horizontal|top" />
+        android:layout_gravity="center_horizontal|top"
+        android:layout_below="@+id/add_friend_search"
+        android:layout_centerHorizontal="true" />
 
-</FrameLayout>
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="wrap_content"
+        android:layout_height="400dp"
+        android:id="@+id/friend_request_recycler_view"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/no_friends_text" />
+
+    <SearchView
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/add_friend_search"
+        android:searchHintIcon="@android:drawable/ic_menu_search"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/friend_search_list"
+        android:layout_below="@+id/add_friend_search"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:background="@android:color/white"
+        android:clickable="true"/>
+
+</RelativeLayout>
