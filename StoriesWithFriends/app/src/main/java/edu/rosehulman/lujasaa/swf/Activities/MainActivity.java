@@ -280,6 +280,8 @@ public class MainActivity extends AppCompatActivity
             setTitle("SWF: Friends");
         } else if (id == R.id.nav_settings) {
             Intent settingsIntent = new Intent(this, SettingsActivity.class);
+            Bundle b = new Bundle();
+            b.putParcelable("user", mUser);
             startActivity(settingsIntent);
         } else if (id == R.id.nav_logout) {
             setTitle("Stories With Friends");
