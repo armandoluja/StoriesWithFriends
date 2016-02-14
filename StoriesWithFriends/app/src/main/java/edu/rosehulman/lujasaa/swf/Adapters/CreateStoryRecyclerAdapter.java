@@ -1,6 +1,7 @@
 package edu.rosehulman.lujasaa.swf.Adapters;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -58,6 +59,7 @@ public class CreateStoryRecyclerAdapter extends RecyclerView.Adapter<CreateStory
                 mListener.friendSelected(friendArray.get(position), isChecked);
             }
         });
+        holder.mImage.setImageDrawable(ContextCompat.getDrawable(mContext, Integer.parseInt(friendArray.get(position).getIcon())));
     }
 
     @Override

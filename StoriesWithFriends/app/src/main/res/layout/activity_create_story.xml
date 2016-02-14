@@ -104,47 +104,8 @@
             android:layout_weight="1" />
     </LinearLayout>
 
-
     <LinearLayout
-        android:layout_below="@+id/linear_layout_word_limit"
-        android:id="@+id/linear_layout_time_limit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1" />
-
-        <TextView
-            android:id="@+id/time_limit_spinner_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/time_limit"
-            android:textSize="25sp"
-            android:textStyle="bold" />
-
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1" />
-
-        <Spinner
-            android:id="@+id/create_story_time_limit_spinner"
-            android:layout_width="150dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center" />
-
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_below="@+id/linear_layout_time_limit"
+        android:layout_below="@+id/linear_layout_story_mode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">

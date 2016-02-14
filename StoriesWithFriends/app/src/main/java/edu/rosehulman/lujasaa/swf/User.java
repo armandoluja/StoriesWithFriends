@@ -1,5 +1,8 @@
 package edu.rosehulman.lujasaa.swf;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.ArrayList;
@@ -7,7 +10,7 @@ import java.util.ArrayList;
 /**
  * Created by sanderkd on 1/17/2016.
  */
-public class User {
+public class User implements Parcelable {
 
     private String displayName;
     private String icon;
@@ -21,6 +24,25 @@ public class User {
     public User() {
         //required empty constructor
     }
+
+    protected User(Parcel in) {
+        displayName = in.readString();
+        icon = in.readString();
+        stories = in.createStringArrayList();
+        email = in.readString();
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 
     public String getDisplayName() {
         return displayName;
@@ -58,5 +80,18 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(displayName);
+        dest.writeString(icon);
+        dest.writeStringList(stories);
+        dest.writeString(email);
     }
 }

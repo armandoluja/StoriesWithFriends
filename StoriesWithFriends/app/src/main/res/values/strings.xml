@@ -35,6 +35,7 @@
     <string name="friend_request_sent">Friend request sent</string>
     <string name="delete_friend_dialog">"Are you sure you want to delete %s"</string>
     <string name="friend_requests">Friend Requests</string>
+    <string name="google_app_id">658592650920</string>
 
 
     <string-array name="word_limit_array">
@@ -70,5 +71,17 @@
     <string name="magenta">#D126C6</string>
     <string name="black">#000000</string>
     <string name="brown">#8B4513</string>
+    <string name="welcome_message">Welcome new user!</string>
+    <string name="set_display_name">Set Display Name:</string>
+    <string name="choose_icon">Choose an Icon</string>
 
+    <!-- icons -->
+    <string-array name="icons">
+        <item>puzzle</item>
+        <item>dollar</item>
+        <item>earth</item>
+        <item>power</item>
+        <item>star</item>
+        <item>teeth</item>
+    </string-array>
 </resources>

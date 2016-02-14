@@ -1,25 +1,38 @@
 package edu.rosehulman.lujasaa.swf.Activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.batch.android.Batch;
 import com.batch.android.Config;
 import com.firebase.client.AuthData;
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 
 import edu.rosehulman.lujasaa.swf.Const;
 import edu.rosehulman.lujasaa.swf.Fragments.FriendRequestFragment;
@@ -27,7 +40,9 @@ import edu.rosehulman.lujasaa.swf.Fragments.FriendTopFragment;
 import edu.rosehulman.lujasaa.swf.Fragments.FriendsFragment;
 import edu.rosehulman.lujasaa.swf.Fragments.MyCompletedStoriesFragment;
 import edu.rosehulman.lujasaa.swf.Fragments.MyCurrentStoriesFragment;
+import edu.rosehulman.lujasaa.swf.NewUserDialog;
 import edu.rosehulman.lujasaa.swf.R;
+import edu.rosehulman.lujasaa.swf.User;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, FriendTopFragment.Callback {
@@ -38,7 +53,10 @@ public class MainActivity extends AppCompatActivity
     public static final String AUTH_EMAIL = "AUTH_EMAIL";
     public static String mUID;
     public static String mEmail;
+    public static String packageName;
     private FragmentManager mFragmentManager;
+    private Firebase mFirebase;
+    private User mUser;
 
     private FriendsFragment friendFragment;
     private FriendRequestFragment friendRequestFragment;
@@ -64,6 +82,7 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -75,15 +94,16 @@ public class MainActivity extends AppCompatActivity
     protected void onStart() {
         super.onStart();
         Batch.onStart(this);
+        packageName = getPackageName();
 
-        Firebase firebase = new Firebase(Const.FIREBASE);
-        Log.d("batch","on start was called ------: ");
-        if (firebase.getAuth() == null || isExpired(firebase.getAuth())) {
+        mFirebase = new Firebase(Const.FIREBASE);
+        Log.d("batch", "on start was called ------: ");
+        if (mFirebase.getAuth() == null || isExpired(mFirebase.getAuth())) {
             Log.d("batch","Main> Firebase NOT authenticated");
             Intent loginIntent = new Intent(this, LoginActivity.class);
             startActivityForResult(loginIntent, LOGIN_REQUEST_CODE);
         } else {
-            Batch.User.getEditor().setIdentifier(firebase.getAuth().getUid());
+            Batch.User.getEditor().setIdentifier(mFirebase.getAuth().getUid());
             FragmentTransaction ft = mFragmentManager.beginTransaction();
             ft.replace(R.id.fragment_container, new MyCurrentStoriesFragment());
             //clear the backstack so that pressing the back button will exit the application
@@ -92,14 +112,52 @@ public class MainActivity extends AppCompatActivity
                 mFragmentManager.popBackStackImmediate();
             }
             ft.commit();
+            Log.d("batch", "pos 2" + MainActivity.mEmail);
+            checkUsername();
         }
+
+    }
+
+    public void checkUsername(){
+        //if the user doesn't have a displayname
+        Log.d("mainmethod", MainActivity.mEmail);
+        Firebase firebase =new Firebase(Const.USER_REF + mEmail);
+        firebase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d("login", dataSnapshot.toString());
+                User user = dataSnapshot.getValue(User.class);
+                mUser = user;
+                ImageView navImage = (ImageView) findViewById(R.id.image_nav_drawer);
+
+                TextView navText = (TextView) findViewById(R.id.text_nav_drawer);
+
+                if(!navText.equals(null) && !navImage.equals(null)){
+                    navImage.setImageDrawable(ContextCompat.getDrawable(getBaseContext(), Integer.parseInt(mUser.getIcon())));
+                    navText.setText(mUser.getDisplayName());
+                }
+                if (user.getDisplayName().equals("Default Username") || user.getIcon().equals("defaultIcon")) {
+                    DialogFragment df = new NewUserDialog();
+                    Bundle args = new Bundle();
+                    args.putParcelable("user", user);
+                    df.setArguments(args);
+                    df.setCancelable(false);
+                    df.show(mFragmentManager, "newUser");
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
     }
 
     // store the email and uid
     @Override
     protected void onPause() {
         super.onPause();
-        Log.d("batch","Main.OnPause was called.");
+        Log.d("batch", "Main.OnPause was called.");
         SharedPreferences prefs = getSharedPreferences(PREFS, MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(AUTH_UID, mUID);
@@ -117,6 +175,9 @@ public class MainActivity extends AppCompatActivity
             Bundle extras = data.getExtras();
             mUID = extras.getString(AUTH_UID);
             mEmail = extras.getString(AUTH_EMAIL);
+
+            Log.d("batch", "pos 1" + MainActivity.mEmail);
+            checkUsername();
 
 //        Firebase.setAndroidContext(this);
             mFragmentManager = getSupportFragmentManager();
@@ -270,6 +331,4 @@ public class MainActivity extends AppCompatActivity
         Batch.onDestroy(this);
         super.onDestroy();
     }
-
-
 }

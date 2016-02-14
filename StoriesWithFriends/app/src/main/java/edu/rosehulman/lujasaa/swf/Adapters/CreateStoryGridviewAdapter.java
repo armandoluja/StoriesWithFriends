@@ -1,6 +1,7 @@
 package edu.rosehulman.lujasaa.swf.Adapters;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +37,7 @@ public class CreateStoryGridviewAdapter extends BaseAdapter{
     public CreateStoryGridviewAdapter(Context context){
         mContext = context;
         mAddedArray = new ArrayList<>();
+
     }
 
     @Override
@@ -63,6 +65,7 @@ public class CreateStoryGridviewAdapter extends BaseAdapter{
 //            view = convertView;
 //        }
         ImageView mImage = (ImageView) view.findViewById(R.id.create_story_add_friend_image);
+        mImage.setImageDrawable(ContextCompat.getDrawable(mContext, Integer.parseInt(mAddedArray.get(position).getIcon())));
         TextView mText = (TextView) view.findViewById(R.id.create_story_add_friend_text);
         mText.setText(mAddedArray.get(position).getDisplayName());
 

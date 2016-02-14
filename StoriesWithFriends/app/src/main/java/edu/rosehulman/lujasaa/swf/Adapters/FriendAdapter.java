@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -64,6 +65,7 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder
                 removeFriendDialog(v, position);
             }
         });
+        holder.mImage.setImageDrawable(ContextCompat.getDrawable(mFragment.getContext(), Integer.parseInt(friendArray.get(position).getIcon())));
     }
 
     private void removeFriendDialog(final View v, final int position) {

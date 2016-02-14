@@ -1,6 +1,7 @@
 package edu.rosehulman.lujasaa.swf.Adapters;
 
 import android.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -68,6 +69,7 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
                 firebaseRemoveFriendRequest(friendArray.get(position).getEmail());
             }
         });
+        holder.mImage.setImageDrawable(ContextCompat.getDrawable(mFragment.getContext(), Integer.parseInt(friendArray.get(position).getIcon())));
     }
 
     @Override

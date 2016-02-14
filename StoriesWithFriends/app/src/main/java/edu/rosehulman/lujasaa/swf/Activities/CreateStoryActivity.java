@@ -40,7 +40,6 @@ public class CreateStoryActivity extends AppCompatActivity implements CreateStor
     private EditText mStoryNameEditText;
     private Spinner mWordSpinner;// word limit per turn
 
-    private Spinner mTimeSpinner;// time limit per turn disabled for now
     private Spinner mStoryModeSpinner;
 
     // Used for selecting friends to join the story.
@@ -96,7 +95,6 @@ public class CreateStoryActivity extends AppCompatActivity implements CreateStor
         mCancelBtn = (Button)findViewById(R.id.cancel_create_button);
         mStoryNameEditText = (EditText)findViewById(R.id.story_name_edit_text);
         mWordSpinner = (Spinner)findViewById(R.id.create_story_word_limit_spinner);
-        mTimeSpinner = (Spinner)findViewById(R.id.create_story_time_limit_spinner);
         mStoryModeSpinner = (Spinner) findViewById(R.id.story_mode_spinner);
 
         mGridView = (GridView)findViewById(R.id.create_story_grid_view);
@@ -122,7 +120,6 @@ public class CreateStoryActivity extends AppCompatActivity implements CreateStor
         timeLimitAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         storyModeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mWordSpinner.setAdapter(wordLimitAdapter);
-        mTimeSpinner.setAdapter(timeLimitAdapter);
         mStoryModeSpinner.setAdapter(storyModeAdapter);
 
 
