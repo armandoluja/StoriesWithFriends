@@ -7,16 +7,13 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.client.Firebase;
@@ -35,6 +32,20 @@ public class NewUserDialog extends DialogFragment{
     private IconAdapter mAdapter;
     private ImageView currentlySelected;
     private int imageResource;
+    private Callback mListener;
+    private boolean isNewUser;
+    private EditText displayName;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof Callback) {
+            mListener = (Callback) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -44,6 +55,7 @@ public class NewUserDialog extends DialogFragment{
         mFirebase = new Firebase(Const.USER_REF + MainActivity.mEmail);
         final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         View view = LayoutInflater.from(mContext).inflate(R.layout.dialog_new_user, null);
+        displayName = (EditText) view.findViewById(R.id.display_name_edit);
         mGridView = (GridView) view.findViewById(R.id.gridView);
         mAdapter = new IconAdapter(getContext());
         mGridView.setAdapter(mAdapter);
@@ -62,10 +74,15 @@ public class NewUserDialog extends DialogFragment{
             }
         });
 
-        final EditText displayName = (EditText) view.findViewById(R.id.display_name_edit);
-
-        ImageView lblPic = new ImageView(getContext());
-        lblPic.setImageResource(R.drawable.teeth);
+        Bundle args = getArguments();
+        isNewUser = args.getBoolean("isNewUser"); //true if called from mainActivity, false if called from settingsActivity
+        if(!isNewUser){
+            String name = args.getString("displayName");
+            String icon = args.getString("icon");
+            ((TextView) view.findViewById(R.id.welcome_title)).setText(R.string.change_settings);
+            ((TextView) view.findViewById(R.id.welcome_message)).setVisibility(View.INVISIBLE);
+            displayName.setText(name);
+        }
 
 
         builder.setView(view);
@@ -87,13 +104,17 @@ public class NewUserDialog extends DialogFragment{
                     public void onClick(View v) {
                         if (displayName.getText().toString().length() == 0) {
                             Toast.makeText(getContext(), "Display name cannot be empty!", Toast.LENGTH_SHORT).show();
-                        } else {
+                        } else if (displayName.getText().toString().length() > 12){
+                            Toast.makeText(getContext(), "Display name must be less than 13 characters!", Toast.LENGTH_SHORT).show();
+                        }
+                        else {
                             if (currentlySelected == null) {
                                 Toast.makeText(getContext(), "Please select an icon.", Toast.LENGTH_SHORT).show();
                             } else {
                                 mUser.setIcon(imageResource + "");
                                 mUser.setDisplayName(displayName.getText().toString());
                                 mFirebase.setValue(mUser);
+                                mListener.onSet(displayName.getText().toString(), imageResource + "");
                                 d.dismiss();
                             }
                         }
@@ -102,6 +123,13 @@ public class NewUserDialog extends DialogFragment{
             }
         });
         return d;
+    }
+
+
+    //used to set nav drawer top icon and displayName
+    public interface Callback{
+        // TODO: Update argument type and name
+        void onSet(String displayName, String icon);
     }
 
 }

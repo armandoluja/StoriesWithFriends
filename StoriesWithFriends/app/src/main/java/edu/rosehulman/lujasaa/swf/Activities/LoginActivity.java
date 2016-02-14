@@ -271,6 +271,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(mEmailView.getWindowToken(), 0);
     }
+
     private void showProgress(boolean show) {
         mProgressSpinner.setVisibility(show ? View.VISIBLE : View.GONE);
         mLoginForm.setVisibility(show ? View.GONE : View.VISIBLE);

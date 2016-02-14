@@ -1,8 +1,10 @@
 package edu.rosehulman.lujasaa.swf.Activities;
 
+import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.DialogFragment;
@@ -45,7 +47,10 @@ import edu.rosehulman.lujasaa.swf.R;
 import edu.rosehulman.lujasaa.swf.User;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, FriendTopFragment.Callback {
+        implements
+        NavigationView.OnNavigationItemSelectedListener,
+        FriendTopFragment.Callback,
+        NewUserDialog.Callback{
 
     private static final int LOGIN_REQUEST_CODE = 1;
     private final static String PREFS = "PREFS";
@@ -56,6 +61,8 @@ public class MainActivity extends AppCompatActivity
     public static String packageName;
     private FragmentManager mFragmentManager;
     private Firebase mFirebase;
+    private ImageView navImage;
+    private TextView navText;
     private User mUser;
 
     private FriendsFragment friendFragment;
@@ -88,6 +95,14 @@ public class MainActivity extends AppCompatActivity
 
         friendFragment = new FriendsFragment();
         friendRequestFragment = new FriendRequestFragment();
+
+        if(mUser!= null){
+            navImage = (ImageView) findViewById(R.id.image_nav_drawer);
+            navText = (TextView) findViewById(R.id.text_nav_drawer);
+            navImage.setImageDrawable(ContextCompat.getDrawable(getBaseContext(), Integer.parseInt(mUser.getIcon())));
+            navText.setText(mUser.getDisplayName());
+        }
+
     }
 
     @Override
@@ -103,27 +118,29 @@ public class MainActivity extends AppCompatActivity
             Intent loginIntent = new Intent(this, LoginActivity.class);
             startActivityForResult(loginIntent, LOGIN_REQUEST_CODE);
         } else {
-            if(mEmail == null || mEmail.equals("")){
-                Firebase getUserInfo = new Firebase(Const.REPO_REF + mFirebase.getAuth().getUid());
-                Log.d("batch", "the current authd user is : " + mFirebase.getAuth().getUid());
-                getUserInfo.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        mEmail = dataSnapshot.getValue().toString();
-                        Log.d("batch", "pos 2" + MainActivity.mEmail);
-                        checkUsername();
-                    }
+            Firebase getUserInfo = new Firebase(Const.REPO_REF + mFirebase.getAuth().getUid());
+            Log.d("batch", "the current authd user is : " + mFirebase.getAuth().getUid());
+            getUserInfo.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    mEmail = dataSnapshot.getValue().toString();
+                    Log.d("batch", "pos 2" + MainActivity.mEmail);
+                    checkUsername();
+                }
 
-                    @Override
-                    public void onCancelled(FirebaseError firebaseError) {
+                @Override
+                public void onCancelled(FirebaseError firebaseError) {
 
-                    }
-                });
-            }else{
-                continueLoadingOnStart();
-            }
+                }
+            });
         }
 
+        //gets all the setting preferences, second parameter is what they are initialized to if user hasn't set them, tested to work
+        SharedPreferences prefRef = getSharedPreferences(Const.SETTING_PREFERENCES, MODE_PRIVATE);
+        prefRef.getBoolean("Vibrate", true);
+        prefRef.getBoolean("LED Light", true);
+        prefRef.getBoolean("Heads up Notification", true);
+        prefRef.getBoolean("Download Media over Wifi only", false);
     }
 
     public void continueLoadingOnStart(){
@@ -140,26 +157,30 @@ public class MainActivity extends AppCompatActivity
 
     public void checkUsername(){
         //if the user doesn't have a displayname
-        Log.d("mainmethod", MainActivity.mEmail);
         Firebase firebase = new Firebase(Const.USER_REF + mEmail);
         firebase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d("login", dataSnapshot.toString());
                 User user = dataSnapshot.getValue(User.class);
-                mUser = user;
-                ImageView navImage = (ImageView) findViewById(R.id.image_nav_drawer);
-
-                TextView navText = (TextView) findViewById(R.id.text_nav_drawer);
+                navImage = (ImageView) findViewById(R.id.image_nav_drawer);
+                navText = (TextView) findViewById(R.id.text_nav_drawer);
                 // mUser may be null if the user was just recently registered
-                if(mUser != null && !mUser.getDisplayName().equals("Default Username") && !mUser.getIcon().equals("defaultIcon")){
+                if (user != null && !user.getDisplayName().equals("Default Username") && !user.getIcon().equals("defaultIcon")) {
                     //cant parse default username to and int
-                    navImage.setImageDrawable(ContextCompat.getDrawable(getBaseContext(), Integer.parseInt(mUser.getIcon())));
-                    navText.setText(mUser.getDisplayName());
-                }else{
-                    NewUserDialog df = new NewUserDialog();
-                    df.setCancelable(false);
-                    df.show(mFragmentManager, "newUser");
+                    if(navImage != null) {
+                        navImage.setImageDrawable(ContextCompat.getDrawable(getBaseContext(), Integer.parseInt(user.getIcon())));
+                        navText.setText(user.getDisplayName());
+                    }
+                } else {
+                    if (mFragmentManager.findFragmentByTag("newUser") == null) {
+                        NewUserDialog df = new NewUserDialog();
+                        Bundle args = new Bundle();
+                        args.putBoolean("isNewUser", true);
+                        df.setArguments(args);
+                        df.setCancelable(false);
+                        df.show(mFragmentManager, "newUser");
+                    }
                 }
 
                 continueLoadingOnStart();
@@ -281,7 +302,6 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_settings) {
             Intent settingsIntent = new Intent(this, SettingsActivity.class);
             Bundle b = new Bundle();
-            b.putParcelable("user", mUser);
             startActivity(settingsIntent);
         } else if (id == R.id.nav_logout) {
             setTitle("Stories With Friends");
@@ -351,5 +371,11 @@ public class MainActivity extends AppCompatActivity
     protected void onDestroy() {
         Batch.onDestroy(this);
         super.onDestroy();
+    }
+
+    @Override
+    public void onSet(String displayName, String icon) {
+        navImage.setImageDrawable(ContextCompat.getDrawable(getBaseContext(), Integer.parseInt(icon)));
+        navText.setText(displayName);
     }
 }

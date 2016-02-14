@@ -23,4 +23,6 @@ public class Const {
 
     public static String NOTIFICATIONS_REF = FIREBASE + "/notification/";
 
+    public static final String SETTING_PREFERENCES = "SETTING_PREFERENCES";
+
 }

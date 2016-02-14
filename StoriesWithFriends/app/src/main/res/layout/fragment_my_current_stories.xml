@@ -30,7 +30,7 @@
         android:layout_marginBottom="16dp"
         android:layout_marginRight="16dp"
         android:clickable="true"
-        android:src="@drawable/fab_64"
+        android:src="@drawable/edit"
         app:elevation="4dp" />
 
 </android.support.design.widget.CoordinatorLayout>
