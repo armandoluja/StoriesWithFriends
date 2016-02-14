@@ -65,8 +65,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     @Override
     protected void onNewIntent(Intent intent) {
-        Batch.onNewIntent(this, intent);
         super.onNewIntent(intent);
+        Batch.onNewIntent(this, intent);
     }
 
     @Override
@@ -290,13 +290,11 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         @Override
         public void onAuthenticated(final AuthData authData) {
             Intent returnIntent = new Intent();
-            mEmailAddress = mEmailAddress.replace('.','%');
+            mEmailAddress = mEmailAddress.replace('.', '%');
             Log.d("firebase", "Login Activity My authResult handler : onAuthenticated: " + mEmailAddress);
             returnIntent.putExtra(MainActivity.AUTH_UID, authData.getUid());
             returnIntent.putExtra(MainActivity.AUTH_EMAIL, mEmailAddress);
-            //PUSH NOTIFICATIONS
             Log.d("batch", "Firebase authenticated: UID: " + authData.getUid());
-            Batch.User.getEditor().setIdentifier(authData.getUid()).save();
             /**
              * Check if the user is already registered, if not, register them
              * with the default registration settings.

@@ -10,6 +10,8 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 
+import edu.rosehulman.lujasaa.swf.Activities.MainActivity;
+
 /**
  * Created by lujasaa on 2/12/2016.
  */
@@ -26,8 +28,7 @@ public class StoriesWithFriends extends Application {
         if(firebase.getAuth() == null){
             Log.d("batch", "IN APP: firebase NOT authenticated");
         }else{
-            Log.d("batch", "IN APP: firebase authenticated: "+ firebase.getAuth().getUid());
-            Batch.User.getEditor().setIdentifier(firebase.getAuth().getUid());
+            Log.d("batch", "IN APP: firebase authenticated uid : " + firebase.getAuth().getUid());
         }
         //TODO:
         //Batch.Push.setSmallIconResourceId(R.drawable.push_icon);

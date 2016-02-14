@@ -127,7 +127,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void continueLoadingOnStart(){
-        Batch.User.getEditor().setIdentifier(mFirebase.getAuth().getUid());
+        // moved the call to the onActivityResult method
+//        Batch.User.getEditor().setIdentifier(mFirebase.getAuth().getUid());
         FragmentTransaction ft = mFragmentManager.beginTransaction();
         ft.replace(R.id.fragment_container, new MyCurrentStoriesFragment());
         //clear the backstack so that pressing the back button will exit the application
@@ -195,6 +196,9 @@ public class MainActivity extends AppCompatActivity
             mUID = extras.getString(AUTH_UID);
             mEmail = extras.getString(AUTH_EMAIL);
 
+            Batch.User.getEditor().clearAttributes().save();
+            Batch.User.getEditor().setIdentifier(mEmail).save();
+
             Log.d("batch", "pos 1" + MainActivity.mEmail);
             checkUsername();
 
@@ -215,13 +219,14 @@ public class MainActivity extends AppCompatActivity
         //TODO: Log the user out.
         Firebase firebase = new Firebase(Const.FIREBASE);
         firebase.unauth();
+        Batch.setConfig(new Config(Const.BATCH_PUSH_NOTIFICATIONS_API_KEY));
+        Batch.User.getEditor().setIdentifier(null).save();
+        mEmail = null;
+        mUID = null;
         int nEntries = getSupportFragmentManager().getBackStackEntryCount();
         for (int i = 0; i < nEntries; i++) {
             mFragmentManager.popBackStackImmediate();
         }
-        Batch.User.getEditor().setIdentifier(null);
-        mEmail = null;
-        mUID = null;
         this.onStart();
 //        Intent loginIntent = new Intent(this, LoginActivity.class);
 //        startActivityForResult(loginIntent, LOGIN_REQUEST_CODE);
@@ -341,8 +346,8 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onNewIntent(Intent intent) {
-        Batch.onNewIntent(this, intent);
         super.onNewIntent(intent);
+        Batch.onNewIntent(this, intent);
     }
 
     @Override

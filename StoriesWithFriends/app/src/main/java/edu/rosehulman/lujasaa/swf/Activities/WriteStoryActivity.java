@@ -66,8 +66,8 @@ public class WriteStoryActivity extends AppCompatActivity {
 
     @Override
     protected void onNewIntent(Intent intent) {
-        Batch.onNewIntent(this, intent);
         super.onNewIntent(intent);
+        Batch.onNewIntent(this, intent);
     }
 
     @Override
