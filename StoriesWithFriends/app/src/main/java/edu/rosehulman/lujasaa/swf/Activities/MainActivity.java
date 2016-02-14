@@ -103,25 +103,45 @@ public class MainActivity extends AppCompatActivity
             Intent loginIntent = new Intent(this, LoginActivity.class);
             startActivityForResult(loginIntent, LOGIN_REQUEST_CODE);
         } else {
-            Batch.User.getEditor().setIdentifier(mFirebase.getAuth().getUid());
-            FragmentTransaction ft = mFragmentManager.beginTransaction();
-            ft.replace(R.id.fragment_container, new MyCurrentStoriesFragment());
-            //clear the backstack so that pressing the back button will exit the application
-            int nEntries = getSupportFragmentManager().getBackStackEntryCount();
-            for (int i = 0; i < nEntries; i++) {
-                mFragmentManager.popBackStackImmediate();
+            if(mEmail == null || mEmail.equals("")){
+                Firebase getUserInfo = new Firebase(Const.REPO_REF + mFirebase.getAuth().getUid());
+                Log.d("batch", "the current authd user is : " + mFirebase.getAuth().getUid());
+                getUserInfo.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        mEmail = dataSnapshot.getValue().toString();
+                        Log.d("batch", "pos 2" + MainActivity.mEmail);
+                        checkUsername();
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                });
+            }else{
+                continueLoadingOnStart();
             }
-            ft.commit();
-            Log.d("batch", "pos 2" + MainActivity.mEmail);
-            checkUsername();
         }
 
+    }
+
+    public void continueLoadingOnStart(){
+        Batch.User.getEditor().setIdentifier(mFirebase.getAuth().getUid());
+        FragmentTransaction ft = mFragmentManager.beginTransaction();
+        ft.replace(R.id.fragment_container, new MyCurrentStoriesFragment());
+        //clear the backstack so that pressing the back button will exit the application
+        int nEntries = getSupportFragmentManager().getBackStackEntryCount();
+        for (int i = 0; i < nEntries; i++) {
+            mFragmentManager.popBackStackImmediate();
+        }
+        ft.commit();
     }
 
     public void checkUsername(){
         //if the user doesn't have a displayname
         Log.d("mainmethod", MainActivity.mEmail);
-        Firebase firebase =new Firebase(Const.USER_REF + mEmail);
+        Firebase firebase = new Firebase(Const.USER_REF + mEmail);
         firebase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -131,19 +151,18 @@ public class MainActivity extends AppCompatActivity
                 ImageView navImage = (ImageView) findViewById(R.id.image_nav_drawer);
 
                 TextView navText = (TextView) findViewById(R.id.text_nav_drawer);
-
-                if(!navText.equals(null) && !navImage.equals(null)){
+                // mUser may be null if the user was just recently registered
+                if(mUser != null && !mUser.getDisplayName().equals("Default Username") && !mUser.getIcon().equals("defaultIcon")){
+                    //cant parse default username to and int
                     navImage.setImageDrawable(ContextCompat.getDrawable(getBaseContext(), Integer.parseInt(mUser.getIcon())));
                     navText.setText(mUser.getDisplayName());
-                }
-                if (user.getDisplayName().equals("Default Username") || user.getIcon().equals("defaultIcon")) {
-                    DialogFragment df = new NewUserDialog();
-                    Bundle args = new Bundle();
-                    args.putParcelable("user", user);
-                    df.setArguments(args);
+                }else{
+                    NewUserDialog df = new NewUserDialog();
                     df.setCancelable(false);
                     df.show(mFragmentManager, "newUser");
                 }
+
+                continueLoadingOnStart();
             }
 
             @Override

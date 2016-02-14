@@ -40,7 +40,7 @@ public class NewUserDialog extends DialogFragment{
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         mContext = getContext();
         currentlySelected = null;
-        mUser = getArguments().getParcelable("user");
+        mUser = new User();
         mFirebase = new Firebase(Const.USER_REF + MainActivity.mEmail);
         final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         View view = LayoutInflater.from(mContext).inflate(R.layout.dialog_new_user, null);
@@ -53,7 +53,7 @@ public class NewUserDialog extends DialogFragment{
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ImageView mImage = (ImageView) view;
                 mImage.getDrawable();
-                if(currentlySelected!= null){
+                if (currentlySelected != null) {
                     currentlySelected.setBackgroundColor(0x00000000);
                 }
                 currentlySelected = mImage;
@@ -72,43 +72,35 @@ public class NewUserDialog extends DialogFragment{
         builder.setPositiveButton("Get Started!", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                mUser.setIcon(imageResource+"");
-                mUser.setDisplayName(displayName.getText().toString());
-                mFirebase.setValue(mUser);
-
+                // do nothing here, override it below
             }
         });
         builder.setCancelable(false);
         final AlertDialog d = builder.create();
 
+        //override the normal button actions
         d.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
-            public void onShow(final DialogInterface dialog) {
-                d.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
-                displayName.addTextChangedListener(new TextWatcher() {
+            public void onShow(DialogInterface dialog) {
+                d.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        if (s.length() == 0 || currentlySelected.equals(null)) {
-                            d.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+                    public void onClick(View v) {
+                        if (displayName.getText().toString().length() == 0) {
+                            Toast.makeText(getContext(), "Display name cannot be empty!", Toast.LENGTH_SHORT).show();
                         } else {
-                            d.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
+                            if (currentlySelected == null) {
+                                Toast.makeText(getContext(), "Please select an icon.", Toast.LENGTH_SHORT).show();
+                            } else {
+                                mUser.setIcon(imageResource + "");
+                                mUser.setDisplayName(displayName.getText().toString());
+                                mFirebase.setValue(mUser);
+                                d.dismiss();
+                            }
                         }
-                    }
-
-                    @Override
-                    public void afterTextChanged(Editable s) {
-
                     }
                 });
             }
         });
-
-
         return d;
     }
 

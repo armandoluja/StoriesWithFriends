@@ -216,6 +216,7 @@ public class WriteStoryActivity extends AppCompatActivity {
                 }
                 mEditText.setText("");
                 mStoryRef.child("storyTurn").setValue(nextTurn);
+
             } else {
                 Toast.makeText(getBaseContext(), "It isn't your turn!", Toast.LENGTH_SHORT).show();
             }

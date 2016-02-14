@@ -288,7 +288,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     class MyAuthResultHandler implements Firebase.AuthResultHandler {
         @Override
-        public void onAuthenticated(AuthData authData) {
+        public void onAuthenticated(final AuthData authData) {
             Intent returnIntent = new Intent();
             mEmailAddress = mEmailAddress.replace('.','%');
             Log.d("firebase", "Login Activity My authResult handler : onAuthenticated: " + mEmailAddress);
@@ -314,6 +314,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         mUser = new User();
                         mUser.setDisplayName(mDisplayName);
                         mUser.setIcon("defaultIcon");
+                        Firebase addToRepo = new Firebase(Const.REPO_REF);
+                        addToRepo.child(authData.getUid()).setValue(mEmailAddress);
                         checkUserNameAndIcon.setValue(mUser);
                     }
                 }
