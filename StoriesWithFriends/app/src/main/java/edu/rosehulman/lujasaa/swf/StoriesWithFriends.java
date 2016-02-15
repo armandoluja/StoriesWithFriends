@@ -4,6 +4,9 @@ import android.app.Application;
 import android.util.Log;
 
 import com.batch.android.Batch;
+import com.batch.android.BatchPushReceiver;
+import com.batch.android.BatchPushService;
+import com.batch.android.BatchUserDataEditor;
 import com.batch.android.Config;
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
@@ -31,8 +34,8 @@ public class StoriesWithFriends extends Application {
             Log.d("batch", "IN APP: firebase authenticated uid : " + firebase.getAuth().getUid());
         }
         //TODO:
-        //Batch.Push.setSmallIconResourceId(R.drawable.push_icon);
+//        Batch.Push.setSmallIconResourceId(R.drawable.push_icon);
         //Batch.Push.setLargeIcon(BitmapFactory.decodeResource(getResources(),R.drawable.large_push_icon));
-        //Batch.Push.setNotificationsColor(0xFF00FF00);
+//        Batch.Push.setNotificationsColor(0xFF00FF00);
     }
 }

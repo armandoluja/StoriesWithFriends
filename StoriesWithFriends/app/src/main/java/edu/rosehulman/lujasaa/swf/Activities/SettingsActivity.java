@@ -16,10 +16,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.batch.android.Batch;
+import com.batch.android.PushNotificationType;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+
+import java.util.EnumSet;
 
 import edu.rosehulman.lujasaa.swf.Const;
 import edu.rosehulman.lujasaa.swf.NewUserDialog;
@@ -155,8 +158,21 @@ public class SettingsActivity extends AppCompatActivity implements NewUserDialog
 
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            SharedPreferences prefRef = getSharedPreferences(Const.SETTING_PREFERENCES, MODE_PRIVATE);
+            mPrefs = prefRef.edit();
             mPrefs.putBoolean(mCheckBox.getText().toString(), isChecked);
             mPrefs.commit();
+            EnumSet<PushNotificationType> set = EnumSet.allOf(PushNotificationType.class);
+            if(!prefRef.getBoolean("Vibrate", true)){
+                set.remove(PushNotificationType.VIBRATE);
+            }
+            if(!prefRef.getBoolean("LED Light", true)){
+                set.remove(PushNotificationType.LIGHTS);
+            }
+            if(!prefRef.getBoolean("Heads up Notification", true)){
+                set.remove(PushNotificationType.ALERT);
+            }
+            Batch.Push.setNotificationsType(set);
         }
     }
 }

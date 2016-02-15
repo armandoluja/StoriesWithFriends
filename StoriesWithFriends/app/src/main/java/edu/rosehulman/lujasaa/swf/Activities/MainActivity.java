@@ -1,13 +1,9 @@
 package edu.rosehulman.lujasaa.swf.Activities;
 
-import android.app.PendingIntent;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -15,26 +11,24 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.batch.android.Batch;
-import com.batch.android.Config;
+import com.batch.android.BatchUserDataEditor;
+import com.batch.android.PushNotificationType;
 import com.firebase.client.AuthData;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+
+import java.util.EnumSet;
 
 import edu.rosehulman.lujasaa.swf.Const;
 import edu.rosehulman.lujasaa.swf.Fragments.FriendRequestFragment;
@@ -71,7 +65,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        Firebase.setAndroidContext(this);
         Log.d("batch", "onCreate: ----- MAIN WAS CALLED ----");
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -115,6 +108,9 @@ public class MainActivity extends AppCompatActivity
         Log.d("batch", "on start was called ------: ");
         if (mFirebase.getAuth() == null || isExpired(mFirebase.getAuth())) {
             Log.d("batch","Main> Firebase NOT authenticated");
+            BatchUserDataEditor batch = Batch.User.getEditor();
+            batch.setIdentifier(null);
+            batch.save();
             Intent loginIntent = new Intent(this, LoginActivity.class);
             startActivityForResult(loginIntent, LOGIN_REQUEST_CODE);
         } else {
@@ -144,8 +140,20 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void continueLoadingOnStart(){
-        // moved the call to the onActivityResult method
-//        Batch.User.getEditor().setIdentifier(mFirebase.getAuth().getUid());
+        // notification settings /// also triggered by checkbox's in settings activity
+        SharedPreferences prefRef = getSharedPreferences(Const.SETTING_PREFERENCES, MODE_PRIVATE);
+        EnumSet<PushNotificationType> set = EnumSet.allOf(PushNotificationType.class);
+        if(!prefRef.getBoolean("Vibrate", true)){
+            set.remove(PushNotificationType.VIBRATE);
+        }
+        if(!prefRef.getBoolean("LED Light", true)){
+            set.remove(PushNotificationType.LIGHTS);
+        }
+        if(!prefRef.getBoolean("Heads up Notification", true)){
+            set.remove(PushNotificationType.ALERT);
+        }
+        Batch.Push.setNotificationsType(set);
+        // end of notification settings.
         FragmentTransaction ft = mFragmentManager.beginTransaction();
         ft.replace(R.id.fragment_container, new MyCurrentStoriesFragment());
         //clear the backstack so that pressing the back button will exit the application
@@ -169,7 +177,7 @@ public class MainActivity extends AppCompatActivity
                 // mUser may be null if the user was just recently registered
                 if (user != null && !user.getDisplayName().equals("Default Username") && !user.getIcon().equals("defaultIcon")) {
                     //cant parse default username to and int
-                    if(navImage != null) {
+                    if (navImage != null) {
                         navImage.setImageDrawable(ContextCompat.getDrawable(getBaseContext(), Integer.parseInt(user.getIcon())));
                         navText.setText(user.getDisplayName());
                     }
@@ -217,10 +225,10 @@ public class MainActivity extends AppCompatActivity
             mUID = extras.getString(AUTH_UID);
             mEmail = extras.getString(AUTH_EMAIL);
 
-            Batch.User.getEditor().clearAttributes().save();
-            Batch.User.getEditor().setIdentifier(mEmail).save();
-
             Log.d("batch", "pos 1" + MainActivity.mEmail);
+
+            Batch.User.getEditor().setIdentifier(mUID).save();
+
             checkUsername();
 
 //        Firebase.setAndroidContext(this);
@@ -237,11 +245,13 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void onLogout() {
-        //TODO: Log the user out.
+        Log.d("batch", "user logged out");
+        Log.d("batch", "current batch session:" + Batch.getSessionID());
+        Log.d("batch", "current installation: " + Batch.User.getInstallationID());
+        Batch.User.getEditor().setIdentifier(null).save();
         Firebase firebase = new Firebase(Const.FIREBASE);
         firebase.unauth();
-        Batch.onStop(this);
-        Batch.User.getEditor().setIdentifier(null).save();
+
         mEmail = null;
         mUID = null;
         int nEntries = getSupportFragmentManager().getBackStackEntryCount();
