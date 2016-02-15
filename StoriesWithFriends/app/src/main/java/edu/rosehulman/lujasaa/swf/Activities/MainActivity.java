@@ -219,7 +219,7 @@ public class MainActivity extends AppCompatActivity
         //TODO: Log the user out.
         Firebase firebase = new Firebase(Const.FIREBASE);
         firebase.unauth();
-        Batch.setConfig(new Config(Const.BATCH_PUSH_NOTIFICATIONS_API_KEY));
+        Batch.onStop(this);
         Batch.User.getEditor().setIdentifier(null).save();
         mEmail = null;
         mUID = null;
