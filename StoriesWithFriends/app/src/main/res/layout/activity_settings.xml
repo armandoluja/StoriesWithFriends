@@ -1,4 +1,4 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -6,30 +6,42 @@
     tools:context="edu.rosehulman.lujasaa.storieswithfriends.SettingsActivity"
     android:paddingLeft="30dp"
     android:paddingTop="20dp"
-    android:paddingRight="30dp">
+    android:paddingRight="30dp"
+    android:orientation="vertical">
 
-
-
-    <ImageView
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:id="@+id/settings_profile_picture"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:src="@drawable/ic_menu_camera"/>
-
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="320dp"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        android:text="USERNAME HERE"
-        android:id="@+id/settings_username"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/settings_profile_picture"
-        android:layout_toEndOf="@+id/settings_profile_picture" />
+        android:layout_gravity="center"
+        android:id="@+id/user_info"
+        android:orientation="horizontal"
+        android:background="@drawable/custom_border">
+
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:id="@+id/settings_profile_icon"
+            android:src="@drawable/ic_menu_camera"
+            android:paddingLeft="20dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:text="USERNAME HERE"
+            android:id="@+id/settings_username"
+            android:textSize="25sp"/>
+
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:id="@+id/edit_user_settings"
+            android:src="@drawable/edit"
+            android:paddingLeft="30dp"/>
+
+    </LinearLayout>
 
     <TextView
         android:layout_width="wrap_content"
@@ -38,7 +50,7 @@
         android:textSize="24sp"
         android:text="Notifications"
         android:id="@+id/settings_label_notifications"
-        android:layout_below="@+id/settings_profile_picture"
+        android:layout_below="@+id/user_info"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginTop="10dp" />
@@ -70,15 +82,6 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Notify me when the current turn changes."
-        android:id="@+id/settings_new_turn_alerts"
-        android:layout_below="@+id/settings_heads_up_notifications"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -86,7 +89,7 @@
         android:textSize="24sp"
         android:text="Data"
         android:id="@+id/settings_data_textview"
-        android:layout_below="@+id/settings_new_turn_alerts"
+        android:layout_below="@+id/settings_led_light_checkbox"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginTop="41dp" />
@@ -100,4 +103,4 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
-</RelativeLayout>
+</LinearLayout>

@@ -24,6 +24,7 @@ import com.firebase.client.ValueEventListener;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import edu.rosehulman.lujasaa.swf.Const;
 import edu.rosehulman.lujasaa.swf.R;
@@ -205,17 +206,30 @@ public class WriteStoryActivity extends AppCompatActivity {
                 ArrayList<String> members = mStory.getMembers();
 
                 String nextTurn = "";
-                for (int i = 0; i < members.size(); i++) {
-                    //get the position of this user, +1 ,
-                    // then adjust for wrapping around the array (using mod)
-                    if (members.get(i).equals(mEmail)) {
-                        nextTurn = members.get((i + 1) % members.size());
-                        if (nextTurn.equals(mEmail))
-                            break;
+                if(mStory.getMode() == 0) { // gameMode: roundRobin
+                    for (int i = 0; i < members.size(); i++) {
+                        //get the position of this user, +1 ,
+                        // then adjust for wrapping around the array (using mod)
+                        if (members.get(i).equals(mEmail)) {
+                            nextTurn = members.get((i + 1) % members.size());
+                            if (nextTurn.equals(mEmail))
+                                break;
+                        }
                     }
+                    mEditText.setText("");
+                    mStoryRef.child("storyTurn").setValue(nextTurn);
+                }else{ // gameMode: random
+                    Random rn = new Random();
+                    while(nextTurn.equals("")){
+                        String next = members.get(rn.nextInt(members.size()));
+                        if(!next.equals(MainActivity.mEmail)){
+                            nextTurn = next;
+                            break;
+                        };
+                    }
+                    mEditText.setText("");
+                    mStoryRef.child("storyTurn").setValue(nextTurn);
                 }
-                mEditText.setText("");
-                mStoryRef.child("storyTurn").setValue(nextTurn);
 
             } else {
                 Toast.makeText(getBaseContext(), "It isn't your turn!", Toast.LENGTH_SHORT).show();
