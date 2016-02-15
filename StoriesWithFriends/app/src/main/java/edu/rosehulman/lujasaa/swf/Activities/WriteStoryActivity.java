@@ -9,6 +9,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,6 +31,7 @@ import java.util.HashMap;
 import java.util.Random;
 
 import edu.rosehulman.lujasaa.swf.Const;
+import edu.rosehulman.lujasaa.swf.Notification;
 import edu.rosehulman.lujasaa.swf.R;
 import edu.rosehulman.lujasaa.swf.Story;
 import edu.rosehulman.lujasaa.swf.StoryFragment;
@@ -364,6 +366,7 @@ public class WriteStoryActivity extends AppCompatActivity {
             }
             mEditText.setText("");
             mStoryRef.child("storyTurn").setValue(nextTurn);
+            createTurnNotification(nextTurn);
         }else{ // gameMode: random
             Random rn = new Random();
             while(nextTurn.equals("")){
@@ -375,6 +378,7 @@ public class WriteStoryActivity extends AppCompatActivity {
             }
             mEditText.setText("");
             mStoryRef.child("storyTurn").setValue(nextTurn);
+            createTurnNotification(nextTurn);
         }
     }
 
@@ -457,5 +461,36 @@ public class WriteStoryActivity extends AppCompatActivity {
         public void onCancelled(FirebaseError firebaseError) {
 
         }
+    }
+
+
+
+
+
+
+
+    private void createTurnNotification(String nextTurn) {
+        Firebase getUser = new Firebase(Const.REPO_REF);
+        Query user = getUser.orderByValue().equalTo(nextTurn);
+        user.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                DataSnapshot user = dataSnapshot.getChildren().iterator().next();
+                Log.d("got", "user: " + user);
+                ArrayList<String> recipients = new ArrayList<>();
+                recipients.add(user.getKey().toString());
+                Notification n = new Notification();
+                n.setRecipientEmails(recipients);
+                n.setType(0);// your turn!
+                Firebase fbNotifications = new Firebase(Const.NOTIFICATIONS_REF);
+                fbNotifications.push().setValue(n);
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
     }
 }

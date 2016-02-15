@@ -115,6 +115,7 @@ public class MainActivity extends AppCompatActivity
             startActivityForResult(loginIntent, LOGIN_REQUEST_CODE);
         } else {
             Firebase getUserInfo = new Firebase(Const.REPO_REF + mFirebase.getAuth().getUid());
+            Batch.User.getEditor().setIdentifier(mFirebase.getAuth().getUid()).save();
             Log.d("batch", "the current authd user is : " + mFirebase.getAuth().getUid());
             getUserInfo.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override

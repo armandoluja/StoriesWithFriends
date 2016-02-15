@@ -13,7 +13,7 @@ public class Notification {
         switch (type){
             case 0:
             {
-                return "Is is your turn!";
+                return "It is your turn!";
             }
             case 1:
             {
