@@ -3,7 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ffffff"
-    tools:context="edu.rosehulman.lujasaa.storieswithfriends.WriteStoryActivity">
+    tools:context="edu.rosehulman.lujasaa.storieswithfriends.WriteStoryActivity"
+    >
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/write_story_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary" />
 
     <TextView
         android:layout_marginTop="10dp"
@@ -15,7 +22,8 @@
         android:text="It's XXXXX's turn."
         android:id="@+id/write_story_activity_current_turn_textview"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        />
 
     <EditText
         android:layout_width="250dp"
@@ -23,7 +31,8 @@
         android:id="@+id/edit_text_add_to_story"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:inputType="textMultiLine"/>
 
     <Button
         android:layout_width="wrap_content"
@@ -39,16 +48,18 @@
     <TextView
         android:layout_width="match_parent"
         android:paddingRight="10dp"
-        android:gravity="start"
-        android:textAlignment="viewStart"
+        android:gravity="bottom"
         android:paddingLeft="10dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Story content goes here"
         android:id="@+id/story_text_view"
-        android:layout_marginTop="27dp"
-        android:layout_below="@+id/write_story_activity_current_turn_textview"
         android:layout_alignRight="@+id/button_add_to_story"
-        android:layout_alignEnd="@+id/button_add_to_story" />
+        android:layout_alignEnd="@+id/button_add_to_story"
+        android:maxLines="17"
+        android:scrollbars="vertical"
+        android:layout_above="@+id/edit_text_add_to_story"
+        android:layout_below="@+id/write_story_activity_current_turn_textview"
+        android:paddingBottom="10dp"/>
 
 </RelativeLayout>

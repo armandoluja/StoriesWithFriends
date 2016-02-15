@@ -57,8 +57,12 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="edu.rosehulman.lujasaa.swf.Activities.MainActivity" />
+
         </activity>
         <activity android:name=".Activities.ViewStoryActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="edu.rosehulman.lujasaa.swf.Activities.MainActivity" />
         </activity>
 
         <service android:name="com.batch.android.BatchPushService" />

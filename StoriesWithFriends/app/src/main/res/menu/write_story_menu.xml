@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="edu.rosehulman.sanderkd.exam2sanderkd.WriteStoryActivity">
+    <item
+        android:id="@+id/menu_finish_story"
+        android:title="Finish Story"
+        android:orderInCategory="100"
+        app:showAsAction="never" >
+    </item>
+    <item
+        android:id="@+id/menu_kick"
+        android:title="Kick Player"
+        android:orderInCategory="100"
+        app:showAsAction="never" >
+        <menu>
+
+        </menu>
+    </item>
+    <item
+        android:id="@+id/menu_members"
+        android:title="Members"
+        android:orderInCategory="100"
+        app:showAsAction="never" >
+        <menu>
+
+        </menu>
+    </item>
+    <item
+        android:id="@+id/menu_leave"
+        android:title="Leave Story"
+        android:orderInCategory="400"
+        app:showAsAction="never" >
+    </item>
+</menu>
