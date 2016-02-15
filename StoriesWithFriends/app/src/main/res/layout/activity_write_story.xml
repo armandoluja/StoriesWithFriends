@@ -6,12 +6,6 @@
     tools:context="edu.rosehulman.lujasaa.storieswithfriends.WriteStoryActivity"
     >
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/write_story_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary" />
-
     <TextView
         android:layout_marginTop="10dp"
         android:textStyle="bold"

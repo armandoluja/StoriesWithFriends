@@ -3,6 +3,7 @@ package edu.rosehulman.lujasaa.swf.Adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,7 @@ public class CurrentStoriesAdapter extends RecyclerView.Adapter<CurrentStoriesAd
     private final LayoutInflater mInflator;
     private Firebase mFirebase;
     private ArrayList<Story> mStories;
+    private Firebase mStoryRef;
 
     private Context mContext;//need this to start activities
 
@@ -39,6 +41,7 @@ public class CurrentStoriesAdapter extends RecyclerView.Adapter<CurrentStoriesAd
         mFirebase = firebaseRef;
         mContext = context;
         mFirebase.addChildEventListener(new CurrentStoryChildEventListener());
+        mStoryRef = new Firebase(Const.STORY_REF);
     }
 
     @Override
@@ -103,13 +106,12 @@ public class CurrentStoriesAdapter extends RecyclerView.Adapter<CurrentStoriesAd
     private class CurrentStoryChildEventListener implements ChildEventListener {
         @Override
         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-            Firebase getStoryRef = new Firebase(Const.STORY_REF + dataSnapshot.getKey());
-            getStoryRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            mStoryRef.child(dataSnapshot.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     Story s = dataSnapshot.getValue(Story.class);
                     s.setKey(dataSnapshot.getKey());
-                    if(!s.isCompleted()){
+                    if (!s.isCompleted()) {
                         // get only current stories
                         mStories.add(s);
                         notifyDataSetChanged();

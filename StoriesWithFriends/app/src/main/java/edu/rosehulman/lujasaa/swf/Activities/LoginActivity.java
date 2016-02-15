@@ -55,6 +55,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private String mEmailAddress;
     private String mDisplayName;
     private User mUser;
+    private Firebase firebase;
 
 
     @Override
@@ -146,7 +147,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        firebase = new Firebase(Const.FIREBASE);
         Log.d("batch", "onCreate: ----- LOGIN WAS CALLED ----");
         GoogleSignInOptions gso = new GoogleSignInOptions
                 .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -271,7 +272,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(mEmailView.getWindowToken(), 0);
     }
-
     private void showProgress(boolean show) {
         mProgressSpinner.setVisibility(show ? View.VISIBLE : View.GONE);
         mLoginForm.setVisibility(show ? View.GONE : View.VISIBLE);
@@ -281,7 +281,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     public void onLogin(String email, String password) {
         //TODO: Log user in with username & password
         //stuff that happens when someone logs in
-        Firebase firebase = new Firebase(Const.FIREBASE);
         //must write the auth result handler
         mDisplayName = "Default Username";
         firebase.authWithPassword(email, password, new MyAuthResultHandler());

@@ -53,10 +53,11 @@
             android:name=".Activities.WriteStoryActivity"
             android:label="@string/title_activity_write_story"
             android:parentActivityName=".Activities.MainActivity"
-            android:windowSoftInputMode="adjustResize|stateHidden" >
+            android:windowSoftInputMode="adjustResize|stateHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="edu.rosehulman.lujasaa.swf.Activities.MainActivity" />
+                android:value="edu.rosehulman.lujasaa.swf.Activities.MainActivity"
+                />
 
         </activity>
         <activity android:name=".Activities.ViewStoryActivity" >
