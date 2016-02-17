@@ -106,14 +106,23 @@ public class CurrentStoriesAdapter extends RecyclerView.Adapter<CurrentStoriesAd
     private class CurrentStoryChildEventListener implements ChildEventListener {
         @Override
         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-            mStoryRef.child(dataSnapshot.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
+            mStoryRef.child(dataSnapshot.getKey()).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    Story s = dataSnapshot.getValue(Story.class);
-                    s.setKey(dataSnapshot.getKey());
-                    if (!s.isCompleted()) {
+                    Log.d("datatype", " is : " + dataSnapshot);
+                    String key = dataSnapshot.getKey();
+                    Story newStory = dataSnapshot.getValue(Story.class);
+                    newStory.setKey(key);
+                    for(int i = 0 ; i < mStories.size(); i ++){
+                        if(mStories.get(i).getKey().equals(key)){
+                            mStories.set(i, newStory);
+                            notifyDataSetChanged();
+                            return;
+                        }
+                    }
+                    if (!newStory.isCompleted()) {
                         // get only current stories
-                        mStories.add(s);
+                        mStories.add(newStory);
                         notifyDataSetChanged();
                     }
                 }
@@ -127,12 +136,10 @@ public class CurrentStoriesAdapter extends RecyclerView.Adapter<CurrentStoriesAd
 
         @Override
         public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
         }
 
         @Override
         public void onChildRemoved(DataSnapshot dataSnapshot) {
-
         }
 
         @Override
