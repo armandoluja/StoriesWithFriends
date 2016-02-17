@@ -31,6 +31,10 @@ public class Notification {
             {
                 return "You have a new friend request!";
             }
+            case 5:
+            {
+                return "You have a new friend!";
+            }
             default:
                 return "Error";
         }

@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import edu.rosehulman.lujasaa.swf.Activities.MainActivity;
 import edu.rosehulman.lujasaa.swf.Const;
 import edu.rosehulman.lujasaa.swf.Fragments.FriendRequestFragment;
+import edu.rosehulman.lujasaa.swf.Notification;
 import edu.rosehulman.lujasaa.swf.R;
 import edu.rosehulman.lujasaa.swf.User;
 
@@ -158,6 +159,14 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
         friendRequestRef.child(MainActivity.mEmail).child(friend).removeValue();
         friendRef.child(MainActivity.mEmail).child(friend).setValue(true);
         friendRef.child(friend).child(MainActivity.mEmail).setValue(true);
+
+        Notification n = new Notification();
+        ArrayList<String> re = new ArrayList<>();
+        re.add(friend+MainActivity.randomSalt);
+        n.setRecipientEmails(re);
+        n.setType(5);
+        Firebase fb = new Firebase(Const.NOTIFICATIONS_REF);
+        fb.push().setValue(n);
     }
 
     public void firebaseSendFriendRequest(String friend) {
@@ -165,6 +174,13 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
             String add = friend.replace(".", "%");
             friendRequestRef.child(add).child(MainActivity.mEmail).setValue(true);
         }
+        Notification n = new Notification();
+        ArrayList<String> re = new ArrayList<>();
+        re.add(friend+MainActivity.randomSalt);
+        n.setRecipientEmails(re);
+        n.setType(4);
+        Firebase fb = new Firebase(Const.NOTIFICATIONS_REF);
+        fb.push().setValue(n);
     }
     private void firebaseRemoveFriendRequest(String friend) {
         friendRequestRef.child(MainActivity.mEmail).child(friend).removeValue();
