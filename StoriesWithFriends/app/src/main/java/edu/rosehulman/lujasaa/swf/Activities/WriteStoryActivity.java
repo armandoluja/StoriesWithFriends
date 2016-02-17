@@ -487,26 +487,33 @@ public class WriteStoryActivity extends AppCompatActivity {
 
 
     private void createTurnNotification(String nextTurn) {
-        Firebase getUser = new Firebase(Const.REPO_REF);
-        Query user = getUser.orderByValue().equalTo(nextTurn);
-        user.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                DataSnapshot user = dataSnapshot.getChildren().iterator().next();
-                ArrayList<String> recipients = new ArrayList<>();
-                recipients.add(user.getKey().toString());
-                Notification n = new Notification();
-                n.setRecipientEmails(recipients);
-                n.setType(0);// your turn!
-                Firebase fbNotifications = new Firebase(Const.NOTIFICATIONS_REF);
-                fbNotifications.push().setValue(n);
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
+//        Firebase getUser = new Firebase(Const.REPO_REF);
+        ArrayList<String> recipients = new ArrayList<>();
+        recipients.add(nextTurn+MainActivity.randomSalt);
+        Notification n = new Notification();
+        n.setRecipientEmails(recipients);
+        n.setType(0);
+        Firebase fbNotifications = new Firebase(Const.NOTIFICATIONS_REF);
+        fbNotifications.push().setValue(n);
+//        Query user = getUser.orderByValue().equalTo(nextTurn);
+//        user.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                DataSnapshot user = dataSnapshot.getChildren().iterator().next();
+//                ArrayList<String> recipients = new ArrayList<>();
+//                recipients.add(user.getKey().toString());
+//                Notification n = new Notification();
+//                n.setRecipientEmails(recipients);
+//                n.setType(0);// your turn!
+//                Firebase fbNotifications = new Firebase(Const.NOTIFICATIONS_REF);
+//                fbNotifications.push().setValue(n);
+//            }
+//
+//            @Override
+//            public void onCancelled(FirebaseError firebaseError) {
+//
+//            }
+//        });
 
     }
 }

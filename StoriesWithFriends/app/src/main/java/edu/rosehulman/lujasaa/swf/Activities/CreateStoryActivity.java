@@ -19,13 +19,18 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.batch.android.Batch;
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.Query;
+import com.firebase.client.ValueEventListener;
 
 import java.util.ArrayList;
 
 import edu.rosehulman.lujasaa.swf.Adapters.CreateStoryGridviewAdapter;
 import edu.rosehulman.lujasaa.swf.Adapters.CreateStoryRecyclerAdapter;
 import edu.rosehulman.lujasaa.swf.Const;
+import edu.rosehulman.lujasaa.swf.Notification;
 import edu.rosehulman.lujasaa.swf.R;
 import edu.rosehulman.lujasaa.swf.Story;
 import edu.rosehulman.lujasaa.swf.User;
@@ -190,6 +195,12 @@ public class CreateStoryActivity extends AppCompatActivity implements CreateStor
             Firebase userStoriesRef = new Firebase(Const.USER_REF + members.get(i) + "/stories/"+mStoryKey+"/");
             userStoriesRef.setValue(true);
         }
+
+        ArrayList<String> keys = new ArrayList<>();
+        for(int i = 0 ; i < mGridviewAdapter.getMembersArray().size(); i ++){
+            keys.add(mGridviewAdapter.getMembersArray().get(i) + MainActivity.randomSalt);
+        }
+        createNewStoryNotification(keys);//send notification to all the OTHER users
         return true;
     }
 
@@ -211,5 +222,34 @@ public class CreateStoryActivity extends AppCompatActivity implements CreateStor
         }else{
             mGridviewAdapter.removeFriend(friend);
         }
+    }
+
+
+    private void createNewStoryNotification(ArrayList<String> recipients) {
+
+//        for(int i = 0 ; i < recipients.size(); i ++ ){
+//            String email = recipients.get(i);
+//            Firebase getUser = new Firebase(Const.REPO_REF);
+//            Query user = getUser.orderByValue().equalTo(email);
+//            user.addListenerForSingleValueEvent(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(DataSnapshot dataSnapshot) {
+//                    DataSnapshot user = dataSnapshot.getChildren().iterator().next();
+//                    recipients.add(user.getKey().toString());
+//                }
+//
+//                @Override
+//                public void onCancelled(FirebaseError firebaseError) {
+//
+//                }
+//            });
+//        }
+
+
+        Notification n = new Notification();
+        n.setRecipientEmails(recipients);
+        n.setType(3);
+        Firebase fbNotifications = new Firebase(Const.NOTIFICATIONS_REF);
+        fbNotifications.push().setValue(n);
     }
 }

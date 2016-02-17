@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity
         FriendTopFragment.Callback,
         NewUserDialog.Callback{
 
+    public static final String randomSalt = "kdjwo-234kdfo-234l2";
     private static final int LOGIN_REQUEST_CODE = 1;
     private final static String PREFS = "PREFS";
     public static final String AUTH_UID = "AUTH_UID";
@@ -116,7 +117,7 @@ public class MainActivity extends AppCompatActivity
             startActivityForResult(loginIntent, LOGIN_REQUEST_CODE);
         } else {
             final Firebase getUserInfo = new Firebase(Const.REPO_REF + mFirebase.getAuth().getUid());
-            Batch.User.getEditor().setIdentifier(mFirebase.getAuth().getUid()).save();
+//            Batch.User.getEditor().setIdentifier(mFirebase.getAuth().getUid()).save();
             Log.d("batch", "the current authd user is : " + mFirebase.getAuth().getUid());
 
             getUserInfo.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -124,6 +125,7 @@ public class MainActivity extends AppCompatActivity
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     Log.d("getEmail", "onDataChange: " + dataSnapshot);
                     mEmail = dataSnapshot.getValue().toString();
+                    Batch.User.getEditor().setIdentifier(mEmail+randomSalt).save();
                     checkUsername();
                     getUserInfo.removeEventListener(this);
                 }
@@ -165,7 +167,7 @@ public class MainActivity extends AppCompatActivity
         for (int i = 0; i < nEntries; i++) {
             mFragmentManager.popBackStackImmediate();
         }
-        ft.commit();
+        ft.commitAllowingStateLoss();
     }
 
     public void checkUsername(){
@@ -231,7 +233,7 @@ public class MainActivity extends AppCompatActivity
 
             Log.d("batch", "pos 1" + MainActivity.mEmail);
 
-            Batch.User.getEditor().setIdentifier(mUID).save();
+            Batch.User.getEditor().setIdentifier(mEmail+randomSalt).save();
 
             checkUsername();
 
