@@ -23,6 +23,7 @@ import com.batch.android.Batch;
 import com.batch.android.BatchUserDataEditor;
 import com.batch.android.PushNotificationType;
 import com.firebase.client.AuthData;
+import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -114,15 +115,32 @@ public class MainActivity extends AppCompatActivity
             Intent loginIntent = new Intent(this, LoginActivity.class);
             startActivityForResult(loginIntent, LOGIN_REQUEST_CODE);
         } else {
-            Firebase getUserInfo = new Firebase(Const.REPO_REF + mFirebase.getAuth().getUid());
+            final Firebase getUserInfo = new Firebase(Const.REPO_REF + mFirebase.getAuth().getUid());
             Batch.User.getEditor().setIdentifier(mFirebase.getAuth().getUid()).save();
             Log.d("batch", "the current authd user is : " + mFirebase.getAuth().getUid());
-            getUserInfo.addValueEventListener(new ValueEventListener() {
+
+            getUserInfo.addChildEventListener(new ChildEventListener() {
                 @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                     mEmail = dataSnapshot.getValue().toString();
                     Log.d("batch", "pos 2" + MainActivity.mEmail);
                     checkUsername();
+                    getUserInfo.removeEventListener(this);
+                }
+
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                }
+
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
                 }
 
                 @Override
@@ -130,6 +148,7 @@ public class MainActivity extends AppCompatActivity
 
                 }
             });
+
         }
 
         //gets all the setting preferences, second parameter is what they are initialized to if user hasn't set them, tested to work

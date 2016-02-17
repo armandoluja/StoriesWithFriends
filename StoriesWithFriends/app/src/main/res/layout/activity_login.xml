@@ -84,6 +84,18 @@
             android:textColor="#ffffff"
             android:textStyle="bold" />
 
+        <Button
+            style="?android:textAppearanceSmall"
+            android:id="@+id/create_user_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@color/colorPrimaryDark"
+            android:text="@string/create_user"
+            android:textColor="#ffffff"
+            android:textStyle="bold"
+            android:layout_gravity="center_horizontal" />
+
         <com.google.android.gms.common.SignInButton
             android:id="@+id/google_sign_in_button"
             android:layout_width="match_parent"
@@ -92,4 +104,6 @@
             android:layout_marginTop="16dp" />
 
     </LinearLayout>
+
+
 </LinearLayout>

@@ -4,10 +4,13 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.renderscript.ScriptGroup;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
 import android.text.method.ScrollingMovementMethod;
+import android.text.method.TextKeyListener;
 import android.util.Log;
 import android.util.Pair;
 import android.view.Menu;
@@ -172,7 +175,7 @@ public class WriteStoryActivity extends AppCompatActivity {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     onBackPressed();
-                    for(String member: mMembers) {
+                    for (String member : mMembers) {
                         mUserRef.child(member).child("stories").child(mStoryKey).removeValue();
                     }
                     mStoryRef.removeValue();
@@ -310,7 +313,17 @@ public class WriteStoryActivity extends AppCompatActivity {
     private void updateStoryTextView() {
         StringBuilder fullStory = new StringBuilder();
         for (int i = 0; i < mStoryFragments.size(); i++) {
-            fullStory.append(mStoryFragments.get(i).getText() + " ");
+            if(i != 0 && Const.PUNCTUATION.indexOf(mStoryFragments.get(i).getText().charAt(0)) == -1){
+                fullStory.append(" " +mStoryFragments.get(i).getText());
+            }else{
+                fullStory.append(mStoryFragments.get(i).getText());
+            }
+        }
+        if(fullStory.charAt(fullStory.length()-1) == '.'){
+            mEditText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+        }
+        else{
+            mEditText.setInputType(InputType.TYPE_CLASS_TEXT| InputType.TYPE_TEXT_VARIATION_NORMAL);
         }
         mStoryTextView.setText(fullStory.toString());
     }
@@ -326,8 +339,11 @@ public class WriteStoryActivity extends AppCompatActivity {
                     Toast.makeText(getBaseContext(), "You must enter at least one word.", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
-                int wordCount = mEditText.getText().toString().trim().split(" ").length;
+                String[] arr = mEditText.getText().toString().trim().split(" ");
+                int wordCount = arr.length;
+                if(arr[0].length() == 1 && Const.PUNCTUATION.indexOf(arr[0]) != -1){
+                    wordCount--;
+                }
                 if (wordCount > mWordLimit) {
                     Toast.makeText(getBaseContext(), "The word limit is: " + mWordLimit, Toast.LENGTH_SHORT).show();
                     return;
@@ -341,7 +357,7 @@ public class WriteStoryActivity extends AppCompatActivity {
                 }
                 storyFragment.setPosition(position);
                 storyFragment.setSender(mEmail);
-                storyFragment.setText(text);
+                storyFragment.setText(text.trim());
 
                 mStoryFragmentRef.push().setValue(storyFragment);
 
@@ -392,6 +408,7 @@ public class WriteStoryActivity extends AppCompatActivity {
             Log.d("firebase", "onChildAdded: " + dataSnapshot.getValue());
             if(dataSnapshot.getValue() != null) {
                 mStory = dataSnapshot.getValue(Story.class);
+                mEditText.setHint("Word limit: "+ mStory.getWordlimit());
                 mMembers = mStory.getMembers();
                 if (!mStory.getOwner().equals(MainActivity.mEmail)) {
                     mMenu.findItem(R.id.menu_finish_story).setVisible(false);
@@ -476,7 +493,6 @@ public class WriteStoryActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 DataSnapshot user = dataSnapshot.getChildren().iterator().next();
-                Log.d("got", "user: " + user);
                 ArrayList<String> recipients = new ArrayList<>();
                 recipients.add(user.getKey().toString());
                 Notification n = new Notification();

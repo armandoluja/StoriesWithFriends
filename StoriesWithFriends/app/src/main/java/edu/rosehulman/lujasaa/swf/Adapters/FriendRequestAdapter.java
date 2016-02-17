@@ -157,6 +157,7 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
     public void firebaseAddFriend(String friend) {
         friendRequestRef.child(MainActivity.mEmail).child(friend).removeValue();
         friendRef.child(MainActivity.mEmail).child(friend).setValue(true);
+        friendRef.child(friend).child(MainActivity.mEmail).setValue(true);
     }
 
     public void firebaseSendFriendRequest(String friend) {

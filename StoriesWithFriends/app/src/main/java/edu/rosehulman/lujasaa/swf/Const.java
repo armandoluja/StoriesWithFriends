@@ -25,4 +25,6 @@ public class Const {
 
     public static final String SETTING_PREFERENCES = "SETTING_PREFERENCES";
 
+    public static final String PUNCTUATION = ".,-!?:;";
+
 }

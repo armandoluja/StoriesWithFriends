@@ -13,8 +13,10 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.batch.android.Batch;
 import com.firebase.client.AuthData;
@@ -165,6 +167,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         mLoginForm = findViewById(R.id.login_form);
         mProgressSpinner = findViewById(R.id.login_progress);
         View loginButton = findViewById(R.id.email_sign_in_button);
+        Button createUserButton = (Button) findViewById(R.id.create_user_button);
         mGoogleSignInButton = (SignInButton) findViewById(R.id.google_sign_in_button);
         mEmailView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -192,6 +195,12 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 login();
             }
         });
+        createUserButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createUser();
+            }
+        });
         mGoogleSignInButton.setColorScheme(SignInButton.COLOR_LIGHT);
         mGoogleSignInButton.setSize(SignInButton.SIZE_WIDE);
         mGoogleSignInButton.setOnClickListener(new View.OnClickListener() {
@@ -203,6 +212,62 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
         Firebase firebase = new Firebase(Const.FIREBASE);
     }
+
+    private void createUser() {
+        if (mLoggingIn) {
+            return;
+        }
+
+        mEmailView.setError(null);
+        mPasswordView.setError(null);
+
+        mEmailAddress = mEmailView.getText().toString();
+        String password = mPasswordView.getText().toString();
+
+        boolean cancelLogin = false;
+        View focusView = null;
+
+        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
+            mPasswordView.setError(getString(R.string.error_invalid_email));
+            focusView = mPasswordView;
+            cancelLogin = true;
+        }
+
+        if (TextUtils.isEmpty(mEmailAddress)) {
+            mEmailView.setError(getString(R.string.error_field_required));
+            focusView = mEmailView;
+            cancelLogin = true;
+        } else if (!isEmailValid(mEmailAddress)) {
+            mEmailView.setError(getString(R.string.error_invalid_email));
+            focusView = mEmailView;
+            cancelLogin = true;
+        }
+
+        if (cancelLogin) {
+            // error in login
+            focusView.requestFocus();
+        } else {
+            firebase.createUser(mEmailAddress, password, new Firebase.ResultHandler() {
+                @Override
+                public void onSuccess() {
+                    Toast.makeText(LoginActivity.this, "User Created, You're good to Login", Toast.LENGTH_SHORT).show();
+                    String path = mEmailAddress.replace(".", "%");
+                    Firebase checkUserNameAndIcon = new Firebase(Const.USER_REF +path + "/");
+                    mUser = new User();
+                    mUser.setDisplayName("Default Username");
+                    mUser.setIcon("defaultIcon");
+                    checkUserNameAndIcon.setValue(mUser);
+                }
+
+                @Override
+                public void onError(FirebaseError firebaseError) {
+                    Toast.makeText(LoginActivity.this, "Error Creating User", Toast.LENGTH_SHORT).show();
+                }
+            });
+            hideKeyboard();
+        }
+    }
+
 
     private void loginWithGoogle() {
         if (mLoggingIn) {
@@ -303,19 +368,19 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             checkUserNameAndIcon.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    if(dataSnapshot.exists()){
+                    if (dataSnapshot.exists()) {
 
-                    }else{
+                    } else {
                         /**
                          * Create a default user.
                          */
                         mUser = new User();
                         mUser.setDisplayName(mDisplayName);
                         mUser.setIcon("defaultIcon");
-                        Firebase addToRepo = new Firebase(Const.REPO_REF);
-                        addToRepo.child(authData.getUid()).setValue(mEmailAddress);
                         checkUserNameAndIcon.setValue(mUser);
                     }
+                    Firebase addToRepo = new Firebase(Const.REPO_REF);
+                    addToRepo.child(authData.getUid()).setValue(mEmailAddress);
                 }
 
                 @Override

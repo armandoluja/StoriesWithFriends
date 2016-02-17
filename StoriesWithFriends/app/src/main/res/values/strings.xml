@@ -80,6 +80,7 @@
     <string name="kick_confirmation">"Are you sure you want to kick %s"</string>
     <string name="leave_with_2_confirmation">Leaving this story with two people will cause the story to be deleted, continue?</string>
     <string name="kick_with_2_confirmation">Kicking the only other member of this story will cause the story to be deleted, continue?</string>
+    <string name="create_user">Create User</string>
 
     <!-- icons -->
     <string-array name="icons">
