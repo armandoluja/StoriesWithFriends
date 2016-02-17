@@ -119,28 +119,13 @@ public class MainActivity extends AppCompatActivity
             Batch.User.getEditor().setIdentifier(mFirebase.getAuth().getUid()).save();
             Log.d("batch", "the current authd user is : " + mFirebase.getAuth().getUid());
 
-            getUserInfo.addChildEventListener(new ChildEventListener() {
+            getUserInfo.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
-                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Log.d("getEmail", "onDataChange: " + dataSnapshot);
                     mEmail = dataSnapshot.getValue().toString();
-                    Log.d("batch", "pos 2" + MainActivity.mEmail);
                     checkUsername();
                     getUserInfo.removeEventListener(this);
-                }
-
-                @Override
-                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-                }
-
-                @Override
-                public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                }
-
-                @Override
-                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
                 }
 
                 @Override
@@ -148,7 +133,6 @@ public class MainActivity extends AppCompatActivity
 
                 }
             });
-
         }
 
         //gets all the setting preferences, second parameter is what they are initialized to if user hasn't set them, tested to work
