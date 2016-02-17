@@ -142,29 +142,14 @@ public class ViewStoryActivity extends AppCompatActivity {
         fragments.addChildEventListener(new StoryFragmentChildEventListener());
 
 
-        fragments.addListenerForSingleValueEvent(new ValueEventListener() { //runs once initial data is done
+        mUserRef.addListenerForSingleValueEvent(new ValueEventListener() { //runs once initial data is done
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mCustomHtml.append("</p>");
                 for (final String user : mMembers) {
-                        int resource = getResources().getIdentifier(mUserColors.get(user), "string", getPackageName());
-                        String color = getString(resource);
-                        Log.d("db", mUNameDisplayName.toString());
-                        Thread thread = new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-
-                            }
-                        });
-                        while(mUNameDisplayName.size() != mMembers.size()){
-                            Log.d("db","mUN: "+ mUNameDisplayName.size());
-                            try {
-                                thread.sleep(200);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        mCustomHtml.append("<p><span class='box' style='background:" + color + "'></span>" + mUNameDisplayName.get(user) + "<p>");
-                        mUserRef.child(user).child("displayName").removeEventListener(this);
+                    int resource = getResources().getIdentifier(mUserColors.get(user), "string", getPackageName());
+                    final String color = getString(resource);
+                    Log.d("db", mUNameDisplayName.toString());
+                    mCustomHtml.append("<p><span class='box' style='background:" + color + "'></span>" + mUNameDisplayName.get(user) + "<p>");
                 }
                 mCustomHtml.append("</body></html>");
                 mWebView.loadDataWithBaseURL("file:///android_asset/", mCustomHtml.toString(), "text/html", "UTF-8", "");
