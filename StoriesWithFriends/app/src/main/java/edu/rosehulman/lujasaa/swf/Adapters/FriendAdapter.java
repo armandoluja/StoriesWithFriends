@@ -161,6 +161,7 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder
 
     public void firebaseRemoveFriend(String friend){
         friendRef.child(MainActivity.mEmail).child(friend).removeValue();
+        friendRef.child(friend).child(MainActivity.mEmail).removeValue();
     }
     public void firebaseAddFriend(String friend){
         friendRequestRef.child(MainActivity.mEmail).child(friend).removeValue();
