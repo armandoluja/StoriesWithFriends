@@ -2,6 +2,7 @@ package edu.rosehulman.lujasaa.swf.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.view.PagerTitleStrip;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -109,6 +110,16 @@ public class CurrentStoriesAdapter extends RecyclerView.Adapter<CurrentStoriesAd
             mStoryRef.child(dataSnapshot.getKey()).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
+                    if(dataSnapshot.getValue() == null){
+                        for(Story story: mStories){
+                            if(story.getKey().equals(dataSnapshot.getKey())){
+                                mStories.remove(story);
+                                notifyDataSetChanged();
+                                mStoryRef.removeEventListener(this);
+                                return;
+                            }
+                        }
+                    }
                     Log.d("datatype", " is : " + dataSnapshot);
                     String key = dataSnapshot.getKey();
                     Story newStory = dataSnapshot.getValue(Story.class);

@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
+import edu.rosehulman.lujasaa.swf.CompleteStory;
 import edu.rosehulman.lujasaa.swf.Const;
 import edu.rosehulman.lujasaa.swf.Notification;
 import edu.rosehulman.lujasaa.swf.R;
@@ -68,6 +69,7 @@ public class WriteStoryActivity extends AppCompatActivity {
     private int mWordLimit;
     private Story mStory;
     private ArrayList<String> mMembers;
+    private HashMap<String, String> mUsernameMap;
 
 
 
@@ -114,6 +116,7 @@ public class WriteStoryActivity extends AppCompatActivity {
         mStoryTextView = (TextView) findViewById(R.id.story_text_view);
         mStoryTextView.setMovementMethod(new ScrollingMovementMethod());
         mMembers = new ArrayList<>();
+        mUsernameMap = new HashMap<>();
 
         mAddToStoryButton.setOnClickListener(new AddToStoryOnClickListener());
 
@@ -194,8 +197,6 @@ public class WriteStoryActivity extends AppCompatActivity {
                     mMembers.remove(index);
                     mStoryRef.child("members").setValue(mMembers);
                     mUserRef.child(uName).child("stories").child(mStoryKey).removeValue();
-                    memberSubMenu.clear();
-                    kickSubMenu.clear();
                 }
             });
         }
@@ -259,6 +260,9 @@ public class WriteStoryActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 mStoryRef.child("completed").setValue(true);
+                Log.d("db", "here");
+                Log.d("db - map ", mUsernameMap.toString());
+                new CompleteStory(mStory, mStoryFragments, getBaseContext(), mUsernameMap);
                 Intent viewStoryIntent = new Intent(getBaseContext(), ViewStoryActivity.class);
                 viewStoryIntent.putExtra(ViewStoryActivity.STORY_KEY, mStoryKey);//pass the story key to get story fragments
                 viewStoryIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_HISTORY);
@@ -319,11 +323,11 @@ public class WriteStoryActivity extends AppCompatActivity {
                 fullStory.append(mStoryFragments.get(i).getText());
             }
         }
-        if(fullStory.charAt(fullStory.length()-1) == '.'){
+        if(fullStory.charAt(fullStory.length() - 1) == '.'){
             mEditText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
         }
         else{
-            mEditText.setInputType(InputType.TYPE_CLASS_TEXT| InputType.TYPE_TEXT_VARIATION_NORMAL);
+            mEditText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_NORMAL);
         }
         mStoryTextView.setText(fullStory.toString());
     }
@@ -408,6 +412,7 @@ public class WriteStoryActivity extends AppCompatActivity {
             Log.d("firebase", "onChildAdded: " + dataSnapshot.getValue());
             if(dataSnapshot.getValue() != null) {
                 mStory = dataSnapshot.getValue(Story.class);
+                mStory.setKey(dataSnapshot.getKey());
                 mEditText.setHint("Word limit: "+ mStory.getWordlimit());
                 mMembers = mStory.getMembers();
                 if (!mStory.getOwner().equals(MainActivity.mEmail)) {
@@ -419,16 +424,21 @@ public class WriteStoryActivity extends AppCompatActivity {
                     mUserRef.child(member).child("displayName").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            memberSubMenu.add((String) dataSnapshot.getValue());
-                            if (mStory.getOwner().equals(MainActivity.mEmail) && !member.equals(MainActivity.mEmail)) {
-                                MenuItem item = kickSubMenu.add((String) dataSnapshot.getValue());
-                                item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                                    @Override
-                                    public boolean onMenuItemClick(MenuItem item) {
-                                        kickPlayer(member, item.getTitle());
-                                        return true;
-                                    }
-                                });
+                            Log.d("db -snap", dataSnapshot.toString());
+                            if (memberSubMenu.size() != mMembers.size()) {
+                                mUsernameMap.put(member, (String)dataSnapshot.getValue());
+                                memberSubMenu.add((String) dataSnapshot.getValue());
+                                if (mStory.getOwner().equals(MainActivity.mEmail) && !member.equals(MainActivity.mEmail)) {
+                                    MenuItem item = kickSubMenu.add((String) dataSnapshot.getValue());
+                                    item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                                        @Override
+                                        public boolean onMenuItemClick(MenuItem item) {
+                                            kickPlayer(member, item.getTitle());
+                                            return true;
+                                        }
+                                    });
+                                }
+                                mUserRef.removeEventListener(this);
                             }
                         }
 

@@ -37,6 +37,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Random;
 
+import edu.rosehulman.lujasaa.swf.CompletedStory;
 import edu.rosehulman.lujasaa.swf.Const;
 import edu.rosehulman.lujasaa.swf.R;
 import edu.rosehulman.lujasaa.swf.SavePhotoTask;
@@ -51,7 +52,7 @@ public class ViewStoryActivity extends AppCompatActivity {
     private Firebase mStoryRef;
     private Firebase mStoryFragmentRef;
     ArrayList<StoryFragment> mStoryFragments;
-    private Story mStory;
+    private CompletedStory mStory;
     private HashMap<String, String> mUserColors;
     private String[] mColors;
     private ArrayList<String> mUsedColors;
@@ -108,56 +109,20 @@ public class ViewStoryActivity extends AppCompatActivity {
         mStoryFragments = new ArrayList<>();
         mMembers = new ArrayList<>();
 
-        mCustomHtml = new StringBuilder();
-        mCustomHtml.append("<html>");
-        mCustomHtml.append("<head>");
-        mCustomHtml.append("<link rel=stylesheet href='css/style.css'>");
+        mStoryRef = new Firebase(Const.COMPLETE_STORY_REF + mStoryKey);
 
-        mStoryRef = new Firebase(Const.STORY_REF + mStoryKey);
-        mStoryRef.addValueEventListener(new StoryChildEventListener());
-
-        mStoryRef.addListenerForSingleValueEvent(new ValueEventListener() { //once data is initialized
+        mStoryRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                mCustomHtml.append("</head>");
-                mCustomHtml.append("<body>");
-                mCustomHtml.append("<h1 class='centered'>" + mStory.getStoryname() + "</h1>");
+                Log.d("dataSnap", dataSnapshot.toString());
+                CompletedStory mStory = dataSnapshot.getValue(CompletedStory.class);
+                mStory = dataSnapshot.getValue(CompletedStory.class);
+                mWebView.loadDataWithBaseURL("file:///android_asset/", mStory.getStory(), "text/html", "UTF-8", "");
             }
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
 
-            }
-        });
-
-
-
-        mStoryFragmentRef = new Firebase(Const.STORY_FRAGMENTS_REF + mStoryKey + "/");
-        Query fragments = mStoryFragmentRef.orderByChild("position");
-
-
-
-
-
-        fragments.addChildEventListener(new StoryFragmentChildEventListener());
-
-
-        mUserRef.addListenerForSingleValueEvent(new ValueEventListener() { //runs once initial data is done
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                mCustomHtml.append("</p>");
-                for (final String user : mMembers) {
-                    int resource = getResources().getIdentifier(mUserColors.get(user), "string", getPackageName());
-                    final String color = getString(resource);
-                    Log.d("db", mUNameDisplayName.toString());
-                    mCustomHtml.append("<p><span class='box' style='background:" + color + "'></span>" + mUNameDisplayName.get(user) + "<p>");
-                }
-                mCustomHtml.append("</body></html>");
-                mWebView.loadDataWithBaseURL("file:///android_asset/", mCustomHtml.toString(), "text/html", "UTF-8", "");
-
-
-            }
-
-            public void onCancelled(FirebaseError firebaseError) {
             }
         });
 
@@ -173,78 +138,6 @@ public class ViewStoryActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void updateStoryTextView(StoryFragment storyFragment) {
-        mCustomHtml.append("<span class='" + mUserColors.get(storyFragment.getSender()) + "'>" + storyFragment.getText() + " </span>");
-    }
-
-
-    private class StoryChildEventListener implements ValueEventListener {
-        @Override
-        public void onDataChange(DataSnapshot dataSnapshot) {
-            mStory = dataSnapshot.getValue(Story.class);
-            mMembers = mStory.getMembers();
-            for(final String user: mMembers){
-                mUserRef.child(user).child("displayName").addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        Log.d("db", "here");
-                        mUNameDisplayName.put(user, (String) dataSnapshot.getValue());
-                    }
-
-                    @Override
-                    public void onCancelled(FirebaseError firebaseError) {
-
-                    }
-                });
-            }
-            while(mUsedColors.size() != mMembers.size()){
-                int rnd = new Random().nextInt(mColors.length);
-                if(mUsedColors.indexOf(mColors[rnd]) == -1){
-                    mUserColors.put(mMembers.get(mUsedColors.size()), mColors[rnd]);
-                    mUsedColors.add(mColors[rnd]);
-                }
-
-
-            }
-        }
-
-        @Override
-        public void onCancelled(FirebaseError firebaseError) {
-
-        }
-    }
-
-    private class StoryFragmentChildEventListener implements ChildEventListener {
-        @Override
-        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-            StoryFragment storyFragment = dataSnapshot.getValue(StoryFragment.class);
-            mStoryFragments.add(storyFragment);
-            updateStoryTextView(storyFragment);
-        }
-
-
-
-        @Override
-        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-        }
-
-        @Override
-        public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-        }
-
-        @Override
-        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-        }
-
-        @Override
-        public void onCancelled(FirebaseError firebaseError) {
-
-        }
     }
 
     @Override

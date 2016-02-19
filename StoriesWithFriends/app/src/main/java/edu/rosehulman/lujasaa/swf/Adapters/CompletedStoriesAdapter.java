@@ -17,6 +17,8 @@ import com.firebase.client.ValueEventListener;
 import java.util.ArrayList;
 
 import edu.rosehulman.lujasaa.swf.Activities.ViewStoryActivity;
+import edu.rosehulman.lujasaa.swf.CompleteStory;
+import edu.rosehulman.lujasaa.swf.CompletedStory;
 import edu.rosehulman.lujasaa.swf.Const;
 import edu.rosehulman.lujasaa.swf.R;
 import edu.rosehulman.lujasaa.swf.Story;
@@ -27,7 +29,7 @@ import edu.rosehulman.lujasaa.swf.Story;
 public class CompletedStoriesAdapter extends RecyclerView.Adapter<CompletedStoriesAdapter.ViewHolder> {
     private final LayoutInflater mInflator;
     private Firebase mFirebase;
-    private ArrayList<Story> mStories;
+    private ArrayList<CompletedStory> mStories;
 
     private Context mContext;//need this to start activities
 
@@ -77,7 +79,7 @@ public class CompletedStoriesAdapter extends RecyclerView.Adapter<CompletedStori
             mCompletionDate = (TextView) itemView.findViewById(R.id.completion_time);
         }
 
-        public void bindToView(Story story) {
+        public void bindToView(CompletedStory story) {
             mStoryName.setText(story.getStoryname());
             mStoryKey = story.getKey();
             mCompletionDate.setText(" ");//not using this yet
@@ -94,16 +96,17 @@ public class CompletedStoriesAdapter extends RecyclerView.Adapter<CompletedStori
     private class CompletedStoryChildEventListener implements ChildEventListener {
         @Override
         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-            Firebase getStoryRef = new Firebase(Const.STORY_REF + dataSnapshot.getKey());
+            Firebase getStoryRef = new Firebase(Const.COMPLETE_STORY_REF + dataSnapshot.getKey());
             getStoryRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    Story s = dataSnapshot.getValue(Story.class);
-                    s.setKey(dataSnapshot.getKey());
-                    if(s.isCompleted()){
+                    if(dataSnapshot.getValue() != null) {
+                        CompletedStory s = dataSnapshot.getValue(CompletedStory.class);
+                        s.setKey(dataSnapshot.getKey());
                         // get only completed stories
                         mStories.add(s);
                         notifyDataSetChanged();
+
                     }
                 }
 

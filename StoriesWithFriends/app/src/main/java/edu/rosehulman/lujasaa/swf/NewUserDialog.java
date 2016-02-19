@@ -113,7 +113,8 @@ public class NewUserDialog extends DialogFragment{
                             } else {
                                 mUser.setIcon(imageResource + "");
                                 mUser.setDisplayName(displayName.getText().toString());
-                                mFirebase.setValue(mUser);
+                                mFirebase.child("displayName").setValue(mUser.getDisplayName());
+                                mFirebase.child("icon").setValue(mUser.getIcon());
                                 mListener.onSet(displayName.getText().toString(), imageResource + "");
                                 d.dismiss();
                             }
